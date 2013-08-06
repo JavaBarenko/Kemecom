@@ -45,9 +45,23 @@ module.exports = function(grunt) {
                 src: ['dist/assets/*.css']
             }
         },
+        cssmin: {
+            options: {
+                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */'
+            },
+            build: {
+                files: {
+                    '<%= buildDir %>/assets/style.css': ['src/css/**/*.css', '<%= buildDir %>/assets/style.css']
+                }
+            },
+            dist: {
+                files: {
+                    'dist/assets/style.css': ['src/css/**/*.css', 'dist/assets/style.css']
+                }
+            }
+        },
         jshint: {
-            all: ['{src, test}/js/**/*.js'],
-            ignores: ['{src, test}/js/test/**/*.js']
+            all: ['{src, test}/js/*.js']
         },
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
@@ -170,12 +184,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-csslint');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     //registra tarefas
-    grunt.registerTask('build', ['clean:build', 'less:build', 'csslint:build', 'jshint', 'uglify:build', 'htmlmin:build', 'imagemin:build']);
-    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'csslint:dist', 'jshint', 'uglify:dist', 'htmlmin:dist', 'imagemin:dist']);
+    grunt.registerTask('build', ['clean:build', 'less:build', 'csslint:build', 'cssmin:build', 'jshint', 'uglify:build', 'htmlmin:build', 'imagemin:build']);
+    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'csslint:dist', 'cssmin:dist', 'jshint', 'uglify:dist', 'htmlmin:dist', 'imagemin:dist']);
     grunt.registerTask('default', ['build']);
 };
