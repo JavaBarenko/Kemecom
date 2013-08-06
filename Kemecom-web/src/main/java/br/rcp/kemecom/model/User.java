@@ -22,17 +22,24 @@ public class User {
     private ObjectId id;
     @Indexed
     @NotNull
-    private String username;
     @Email
     private String email;
     private String password;
+    private Address address;
 
     public User() {
     }
 
-    public User(String username, String email) {
-        this.username = username;
+    public User(String email) {
         this.email = email;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public ObjectId getId() {
@@ -41,14 +48,6 @@ public class User {
 
     public void setId(ObjectId id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {
@@ -70,7 +69,7 @@ public class User {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 53 * hash + (this.username != null ? this.username.hashCode() : 0);
+        hash = 53 * hash + (this.email != null ? this.email.hashCode() : 0);
         return hash;
     }
 
@@ -84,9 +83,6 @@ public class User {
         }
         final User other = (User) obj;
         if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        if ((this.username == null) ? (other.username != null) : !this.username.equals(other.username)) {
             return false;
         }
         if ((this.email == null) ? (other.email != null) : !this.email.equals(other.email)) {
