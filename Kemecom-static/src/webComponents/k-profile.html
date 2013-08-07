@@ -1,0 +1,36 @@
+<polymer-element name="k-profile">
+    <template>
+        <section>
+            <h3>Bem vindo, {{ email }}!</h3>
+            <article>
+                <input id="email" type="email" placeholder="E-Mail" readonly>
+                <div>
+                    <input id="zipCode" type="number" maxlength="9" placeholder="CEP" on-input="validateZipCode">
+                    <input id="address" maxlength="120" placeholder="Logradouro">
+                    <input id="number" maxlength="6" placeholder="Número">
+                    <input id="neighbor" maxlength="32" placeholder="Bairro">
+                    <input id="city" maxlength="32" placeholder="Cidade">
+                    <input id="state" maxlength="2" placeholder="Estado">
+                </div>
+                <p>
+                    <button id="update" on-click="update">Alterar</button>
+                    <button id="save" on-click="save" style="display: none">Salvar</button>
+                </p>
+            </article>
+        </section>
+    </template>
+
+    <script>
+        Polymer('k-profile',{
+            validateZipCode: function(){
+                alert(1);
+            },
+            update: function(){
+
+            },
+            save: function(){
+
+            }
+        });
+    </script>
+</polymer-element>

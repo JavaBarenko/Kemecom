@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     grunt.initConfig({
-        buildDir: '../Kemecom-web/src/main/webapp/pages',
+        buildDir: '/usr/local/Cellar/jetty/9.0.3/libexec/webapps.demo/ROOT', //'../Kemecom-web/src/main/webapp/pages',
         distDir: '../Kemecom-web/src/main/webapp/pages',
         clean: {
             build: ['<%= buildDir %>', 'report'],
@@ -11,9 +11,15 @@ module.exports = function(grunt) {
                 paths: ["src/less"]
             },
             build: {
-                files: {
-                    '<%= buildDir %>/assets/style.css': ['src/less/**/*.less']
-                }
+                files: [{
+                    '<%= buildDir %>/assets/style.css': ['src/less/*.less'],
+                    '<%= buildDir %>/assets/k-welcome.css': ['src/less/webComponents/k-welcome.less'],
+                    '<%= buildDir %>/assets/k-sign-in.css': ['src/less/webComponents/k-sign-in.less'],
+                    '<%= buildDir %>/assets/k-remember-password.css': ['src/less/webComponents/k-remember-password.less'],
+                    '<%= buildDir %>/assets/k-profile.css': ['src/less/webComponents/k-profile.less'],
+                    '<%= buildDir %>/assets/k-login.css': ['src/less/webComponents/k-login.less'],
+                    '<%= buildDir %>/assets/k-facebook.css': ['src/less/webComponents/k-facebook.less']
+                }]
             },
             dist: {
                 options: {
@@ -74,7 +80,9 @@ module.exports = function(grunt) {
                     beautify: true
                 },
                 files: {
-                    '<%= buildDir %>/assets/script.js': ['src/js/main.js', 'src/js/other.js']
+                    '<%= buildDir %>/assets/script.js': [
+                        'src/js/k.js', 'src/js/zipCode.js'
+                    ]
                 }
             },
             dist: {
@@ -98,9 +106,14 @@ module.exports = function(grunt) {
                 files: [{
                         expand: true,
                         cwd: 'src/',
-                        src: ['*.html', '*.htm'],
+                        src: ['*.html'],
                         dest: '<%= buildDir %>/'
-                    }]
+                    },{
+                    expand: true,
+                    cwd: 'src/webComponents',
+                    src: ['*.html'],
+                    dest: '<%= buildDir %>/webComponents'
+                }]
             },
             dist: {
                 options: {
@@ -111,9 +124,14 @@ module.exports = function(grunt) {
                 files: [{
                         expand: true,
                         cwd: 'src/',
-                        src: ['*.html', '*.htm'],
+                        src: ['*.html'],
                         dest: 'dist/'
-                    }]
+                    },{
+                    expand: true,
+                    cwd: 'src/webComponents',
+                    src: ['*.html'],
+                    dest: 'dist/webComponents'
+                }]
             }
         },
         imagemin: {
@@ -128,7 +146,7 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'src/img/',
                         src: ['**/*.jpg', '**/*.png', '**/*.jpeg', '**/*.gif'],
-                        dest: '<%= buildDir %>/'
+                        dest: '<%= buildDir %>/assets/'
                     }]
             },
             dist: {
@@ -139,14 +157,41 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'src/img/',
                         src: ['**/*.jpg', '**/*.png', '**/*.jpeg', '**/*.gif'],
-                        dest: 'dist/'
+                        dest: 'dist/assets/'
                     }]
+            }
+        },
+        concat: {
+            options: {
+                separator: ';',
+                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %> */'
+            },
+            build: {
+                src: ['src/js/lib/polymer.min.js'],
+                dest: '<%= buildDir %>/assets/polymer.js'
+            },
+            dist: {
+                src: ['src/js/lib/polymer.min.js'],
+                dest: 'dist/assets/lib.js'
+            }
+        },
+        copy:{
+            build:{
+                files:[
+                    {
+                        expand:true,
+                        src:'src/js/lib/*',
+                        flatten:true,
+                        dest: '<%= buildDir %>/assets/',
+                        filter: 'isFile'
+                    }
+                ]
             }
         },
         watch: {
             options: {
-                nospawn: true,
-                livereload: 34567 //port: 35729
+                nospawn: true
+                //livereload: 34567 //port: 35729
             },
             buildScripts: {
                 files: ['{src,test}/js/**/*.js', 'Gruntfile.js'],
@@ -188,9 +233,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     //registra tarefas
-    grunt.registerTask('build', ['clean:build', 'less:build', 'csslint:build', 'cssmin:build', 'jshint', 'uglify:build', 'htmlmin:build', 'imagemin:build']);
-    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'csslint:dist', 'cssmin:dist', 'jshint', 'uglify:dist', 'htmlmin:dist', 'imagemin:dist']);
+    grunt.registerTask('build', ['clean:build', 'less:build', 'csslint:build', 'cssmin:build', 'jshint', 'uglify:build', 'copy:build', 'htmlmin:build', 'imagemin:build']);
+    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'csslint:dist', 'cssmin:dist', 'jshint', 'uglify:dist', 'copy:dist', 'htmlmin:dist', 'imagemin:dist']);
     grunt.registerTask('default', ['build']);
 };
