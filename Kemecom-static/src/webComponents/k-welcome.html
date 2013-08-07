@@ -1,0 +1,32 @@
+<polymer-element name="k-welcome">
+    <template>
+        <link rel="stylesheet" href="../assets/k-welcome.css" />
+        <section class="k-welcome">
+            <header>
+                <div class="center">
+                    <h1 class="title">Kwik-E-Mart</h1>
+                    <h5 class="subtitle">e-Commerce</h5>
+                </div>
+            </header>
+            <article>
+                <p>
+                    <button on-click="login">Entrar</button>
+                    <button on-click="signin">Novo usuário</button>
+                </p>
+            </article>
+        </section>
+    </template>
+
+    <script>
+        Polymer('k-welcome',{
+            ready: function(){
+            },
+            login: function(ev){
+                K.goTo("k-login");
+            },
+            signin: function(ev){
+                K.goTo("k-sign-in");
+            }
+        });
+    </script>
+</polymer-element>

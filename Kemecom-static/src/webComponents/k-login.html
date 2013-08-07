@@ -1,0 +1,41 @@
+<polymer-element name="k-login">
+    <template>
+        <link rel="stylesheet" href="../assets/k-login.css" />
+        <section class="login">
+            <header>
+                <h3>Login</h3>
+                <h4>Insira seu E-Mail e senha para acessar o sistema</h4>
+            </header>
+            <article>
+                <p>
+                    <label for="email">E-Mail:&nbsp;</label>
+                    <input id="email" type="email" placeholder="E-Mail">
+                </p>
+                <p>
+                    <label for="password">Senha:&nbsp;</label>
+                    <input type="password" id="password" placeholder="Senha">
+                </p>
+                <a href="#" on-click="rememberPassword">Esqueci minha senha...</a>
+                <p>
+                    <button on-click="login">Entrar</button>
+                    <button on-click="register">Criar conta</button>
+                </p>
+            </article>
+        </section>
+    </template>
+
+    <script>
+        Polymer('k-login',{
+            rememberPassword: function(e){
+                e.preventDefault();
+                K.goTo("k-remember-password");
+            },
+            login: function(){
+                alert("faz ajax para login");
+            },
+            register: function(){
+                K.goTo("k-sign-in");
+            }
+        });
+    </script>
+</polymer-element>

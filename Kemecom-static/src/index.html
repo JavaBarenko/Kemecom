@@ -1,58 +1,33 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Kemecom</title>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="robots" content="all">
-        <link rel="stylesheet" href="">
-        <link rel="canonical" href="">
-        <link rel="alternate" type="application/rss+xml" title="" href="">
-        <script src="/assets/script.js" type="text/javascript" charset="utf-8"></script>
+        <link rel="stylesheet" href="../assets/style.css" />
+
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/amplifyjs/1.1.0/amplify.min.js"></script>
+        <script src="/assets/script.js"></script>
+
+        <link rel="import" href="webComponents/k-login.html">
+        <link rel="import" href="webComponents/k-facebook.html">
+        <link rel="import" href="webComponents/k-remember-password.html">
+        <link rel="import" href="webComponents/k-sign-in.html">
+        <link rel="import" href="webComponents/k-welcome.html">
+        <link rel="import" href="webComponents/k-profile.html">
+        <script src="/assets/polymer.min.js"></script>
     </head>
+
     <body>
-        <h1>Bem vindo ao Kemecom!</h1>
-
-        <div class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Modal title</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <form accept-charset="utf-8" action="#" method="POST">
-                                    <label for="login-username">E-Mail:<input id="login-username" maxlength="128"></label>
-                                    <div class="alert">
-                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <strong>Atenção:</strong> Usuário ou senha inválidos!
-                                    </div>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">@</span>
-                                        <input type="text" class="form-control" placeholder="Username">
-                                    </div>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">#</span>
-                                        <input type="text" class="form-control" placeholder="Username">
-                                    </div>
-                                    <div class="alert">
-                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                        <a href="#">Clique aqui se você esqueceu a senha.</a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-        <script src="http://localhost:34567/livereload.js"></script>
+        <header class="message"></header>
+        <section>
+            <article id="content">
+                <k-welcome></k-welcome>
+            </article>
+        </section>
+        <footer></footer>
+        <script>
+            K.setHome("k-welcome");
+        </script>
     </body>
 </html>
