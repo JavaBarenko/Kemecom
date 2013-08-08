@@ -4,3 +4,9 @@
     Resources.java
 - Alterar as configura??es de dom?nio do cookie
     UserService.java
+
+java facebook connector
+oauth facebook
+Usar MDC no log: http://www.javacodegeeks.com/2013/01/effective-logging-in-javajee-mapped-diagnostic-context.html
+
+AOP: http://java.dzone.com/articles/cdi-aop

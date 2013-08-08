@@ -27,6 +27,7 @@ public class ApplicationConfig extends Application {
      * given list with all resources defined in the project.
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(br.rcp.kemecom.helper.AuthenticatorService.class);
         resources.add(br.rcp.kemecom.service.UserService.class);
     }
 }
