@@ -34,7 +34,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.mail.EmailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +106,7 @@ public class UserService {
 
     @POST
     @Path("/{id}")
-    public User updateUser(@PathParam("id") String id, String email, Address address) {
+    public User updateUser(@PathParam("id") String id, @FormParam("email") String email, @FormParam("email") Address address) {
         if (log.isInfoEnabled()) {
             log.info("Atualizando usuario " + id + "...");
         }

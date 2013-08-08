@@ -8,6 +8,7 @@ import br.rcp.kemecom.helper.EmailSender;
 import br.rcp.kemecom.helper.GmailEmailSender;
 import br.rcp.kemecom.helper.Memcached;
 import br.rcp.kemecom.helper.MongoDatastore;
+import br.rcp.kemecom.model.Token;
 import br.rcp.kemecom.model.User;
 import com.google.code.morphia.Datastore;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class Resources {
 
     private void loadDatastore() throws UnknownHostException {
         MongoDatastore mongo = new MongoDatastore("KemecomProject");
-        ds = mongo.registryEntity(User.class).enableValidation().getDataStore();
+        ds = mongo.registryEntity(User.class).registryEntity(Token.class).enableValidation().getDataStore();
     }
 
     private void loadEmailSender() {
