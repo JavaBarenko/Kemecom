@@ -4,8 +4,10 @@
  */
 package br.rcp.kemecom;
 
-import br.rcp.kemecom.db.Memcached;
-import br.rcp.kemecom.db.MongoDatastore;
+import br.rcp.kemecom.helper.EmailSender;
+import br.rcp.kemecom.helper.GmailEmailSender;
+import br.rcp.kemecom.helper.Memcached;
+import br.rcp.kemecom.helper.MongoDatastore;
 import br.rcp.kemecom.model.User;
 import com.google.code.morphia.Datastore;
 import java.io.IOException;
@@ -30,6 +32,10 @@ public class Resources {
     @Produces
     @ApplicationScoped
     private Memcached memcached;
+    @SuppressWarnings("unused")
+    @Produces
+    @ApplicationScoped
+    private EmailSender emailSender;
 
     public Resources() throws Exception {
         if (log.isInfoEnabled()) {
@@ -38,6 +44,7 @@ public class Resources {
 
         loadMemcached();
         loadDatastore();
+        loadEmailSender();
 
         if (log.isInfoEnabled()) {
             log.info("Recursos carregados com sucesso!");
@@ -51,5 +58,9 @@ public class Resources {
     private void loadDatastore() throws UnknownHostException {
         MongoDatastore mongo = new MongoDatastore("KemecomProject");
         ds = mongo.registryEntity(User.class).enableValidation().getDataStore();
+    }
+
+    private void loadEmailSender() {
+        emailSender = new GmailEmailSender("smtp.googlemail.com", 465, "barenko@gmail.com", "4qrq3odq35qh9");
     }
 }

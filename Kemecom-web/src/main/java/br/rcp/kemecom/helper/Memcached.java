@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.rcp.kemecom.db;
+package br.rcp.kemecom.helper;
 
 import java.io.IOException;
 import java.util.Arrays;

@@ -9,11 +9,11 @@
             <article>
                 <p>
                     <label for="email">E-Mail:&nbsp;</label>
-                    <input id="email" type="email" placeholder="E-Mail">
+                    <input id="email" type="email" placeholder="E-Mail" maxlength="120">
                 </p>
                 <p>
                     <label for="password">Senha:&nbsp;</label>
-                    <input type="password" id="password" placeholder="Senha">
+                    <input type="password" id="password" placeholder="Senha" maxlength="20">
                 </p>
                 <a href="#" on-click="rememberPassword">Esqueci minha senha...</a>
                 <p>
@@ -25,15 +25,15 @@
     </template>
 
     <script>
-        Polymer('k-login',{
-            rememberPassword: function(e){
+        Polymer('k-login', {
+            rememberPassword: function(e) {
                 e.preventDefault();
                 K.goTo("k-remember-password");
             },
-            login: function(){
+            login: function() {
                 alert("faz ajax para login");
             },
-            register: function(){
+            register: function() {
                 K.goTo("k-sign-in");
             }
         });

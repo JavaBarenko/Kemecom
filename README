@@ -1,0 +1,6 @@
+- Alterar o endere?o de dom?nio do plugin do facebook
+    k-facebook.html
+- Alterar as configura?oes de conex?o com o mongodb, memcached e servidor de email
+    Resources.java
+- Alterar as configura??es de dom?nio do cookie
+    UserService.java

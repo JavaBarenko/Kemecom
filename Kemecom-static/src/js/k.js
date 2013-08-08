@@ -1,21 +1,21 @@
 
-(function($env, $, amplify){
+(function($env, $, amplify) {
     var K = {};
     var homeTagName = null;
 
-    K.setHome = function(homeComponentTagName){
+    K.setHome = function(homeComponentTagName) {
         homeTagName = homeComponentTagName;
     };
 
-    K.goToHome = function(){
+    K.goToHome = function() {
         K.goTo(homeTagName);
     };
 
 
-    function loadContent(jquerySelector, $webComponent, fadeSpeed){
+    function loadContent(jquerySelector, $webComponent, fadeSpeed) {
         var content = $(jquerySelector);
         content.html("");
-        if(fadeSpeed){
+        if (fadeSpeed) {
             $webComponent.hide();
             content.html($webComponent);
             $webComponent.fadeIn(fadeSpeed);
@@ -24,27 +24,41 @@
         }
     }
 
-    K.goTo = function(componentTagName){
-        loadContent("#content", $("<"+componentTagName+">"));
+    K.goTo = function(componentTagName) {
+        loadContent("#content", $("<" + componentTagName + ">"));
     };
 
-    function showMessage(message, hasSuccessFlag){
-        var type = hasSuccessFlag? 'success':'error';
-        loadContent(".message", $("<k-message message='"+message+"' type='"+type+"'>"), 'slow');
+    function showMessage(message, hasSuccessFlag) {
+        var type = hasSuccessFlag ? 'success' : 'error';
+        loadContent(".message", $("<k-message message='" + message + "' type='" + type + "'>"), 'slow');
     }
 
     K.message = {
-        clear: function(){
+        clear: function() {
             $(".message").html("");
         },
-        showSuccess: function(message){
+        showSuccess: function(message) {
             showMessage(message, true, 'slow');
         },
-        showError: function(message){
+        showError: function(message) {
             showMessage(message, false, 'slow');
         }
     };
 
+    var fbButton;
+    K.facebook = {
+        showIn: function(element) {
+            fbButton = $("#fb");
+            K.facebook.showIn = function(element) {
+                fbButton.appendTo($(element));
+            };
+            K.facebook.showIn(element);
+        },
+        hide: function() {
+            if (fbButton)
+                fbButton.appendTo("#tartaro");
+        }
+    };
 
     $env.K = K;
 }(window, jQuery, amplify));
