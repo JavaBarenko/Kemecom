@@ -4,6 +4,7 @@
  */
 package br.rcp.kemecom.model;
 
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -20,11 +21,12 @@ public class User {
 
     @Id
     private ObjectId id;
-    @Indexed
+    @Indexed(name = "unique_email", dropDups = true, unique = true)
     @NotNull
     @Email
     private String email;
     private String password;
+    @Embedded
     private Address address;
 
     public User() {

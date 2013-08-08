@@ -4,10 +4,13 @@
  */
 package br.rcp.kemecom.model;
 
+import com.google.code.morphia.annotations.Embedded;
+
 /**
  *
  * @author barenko
  */
+@Embedded
 public class Address {
 
     private String zipCode;

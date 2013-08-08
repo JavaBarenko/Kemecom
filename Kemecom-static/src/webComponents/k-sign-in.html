@@ -8,9 +8,18 @@
             </article>
             <article>
                 <header>Cadastre-se via Formulário</header>
-                <input id="email" type="email" placeholder="E-mail" maxlength="120">
-                <input id="password" type="password" maxlength="20" placeholder="Senha">
-                <input id="password2" type="password" maxlength="20" placeholder="Confirmação de Senha">
+                <p>
+                    <label for="email">E-Mail:&nbsp;</label>
+                    <input id="email" type="email" placeholder="E-Mail" maxlength="120">
+                </p>
+                <p>
+                    <label for="password">Senha:&nbsp;</label>
+                    <input type="password" id="password" placeholder="Senha" maxlength="20">
+                </p>
+                <p>
+                    <label for="password2">Senha:&nbsp;</label>
+                    <input type="password2" id="password2" placeholder="Confirmação de Senha" maxlength="20">
+                </p>
                 <p>
                     <button on-click="signin">Criar conta!</button>
                     <button on-click="cancel">Cancelar</button>
@@ -20,12 +29,25 @@
     </template>
 
     <script>
-        Polymer('k-sign-in',{
-            signin: function(){
-                alert(2);
+        Polymer('k-sign-in', {
+            signin: function() {
+                amplify.request("user:addUser", {
+                    email: this.$.email.value,
+                    password: this.$.password.value
+                }, jQuery.proxy(function(msg) {
+                    if (msg.type === 'SUCCESS') {
+                        K.message.showSuccess(msg.message);
+                        K.goTo('k-login');
+                    } else {
+                        K.message.showError(msg.message);
+                        this.$.email.value = msg.object.email;
+                        this.$.password.value = msg.object.password;
+                    }
+                }, this));
             },
-            cancel: function(){
-                alert(3);
+            cancel: function() {
+                K.sss = this;
+                K.goTo('k-login');
             }
         });
     </script>

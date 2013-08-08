@@ -1,10 +1,14 @@
 <polymer-element name="k-facebook">
     <template>
-        <h3>COLOCAR FACEBOOK AQUI!!!</h3>
+        <div id="facebtn"></div>
     </template>
 
     <script>
-        Polymer('k-facebook',{
+        Polymer('k-facebook', {
+            ready: function() {
+                K.facebook.showIn(this.$.facebtn);
+            }
         });
     </script>
 </polymer-element>
+
