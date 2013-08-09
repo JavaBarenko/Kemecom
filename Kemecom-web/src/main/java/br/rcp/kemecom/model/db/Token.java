@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.rcp.kemecom.model;
+package br.rcp.kemecom.model.db;
 
+import br.rcp.kemecom.model.Email;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
@@ -21,9 +22,6 @@ public class Token {
     @Id
     private ObjectId id;
     @NotNull
-    @Indexed(unique = true, dropDups = true, name = "auth_unique_token")
-    private String token;
-    @NotNull
     private String ipAddress;
     @NotNull
     @Indexed(unique = true, dropDups = true, name = "auth_unique_email")
@@ -33,12 +31,13 @@ public class Token {
 
     public Token() {
         createdAt = new Date();
+        lastAccessedAt = new Date();
     }
 
-    public Token(String token, String ipAddress, String email) {
-        this.token = token;
+    public Token(String ipAddress, Email email) {
+        this();
         this.ipAddress = ipAddress;
-        this.email = email;
+        this.email = email.toString();
     }
 
     public String getEmail() {
@@ -59,14 +58,6 @@ public class Token {
 
     public void setId(ObjectId id) {
         this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getIpAddress() {

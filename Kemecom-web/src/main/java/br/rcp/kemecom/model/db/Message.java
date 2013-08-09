@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.rcp.kemecom.model;
+package br.rcp.kemecom.model.db;
 
 /**
  *
@@ -10,20 +10,21 @@ package br.rcp.kemecom.model;
  */
 public class Message {
 
-    public enum Type {
+    public static interface Type {
 
-        SUCCESS, ERROR
+        static final String SUCCESS = "SUCCESS";
+        static final String ERROR = "ERROR";
     }
-    private Type type;
+    private String type;
     private String message;
     private Object object;
 
-    public Message(Type type, String message) {
+    public Message(String type, String message) {
         this.type = type;
         this.message = message;
     }
 
-    public Message(Type type, String message, Object object) {
+    public Message(String type, String message, Object object) {
         this.type = type;
         this.message = message;
         this.object = object;
@@ -32,11 +33,11 @@ public class Message {
     public Message() {
     }
 
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(String type) {
         this.type = type;
     }
 

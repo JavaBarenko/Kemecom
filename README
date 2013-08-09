@@ -4,6 +4,10 @@
     Resources.java
 - Alterar as configura??es de dom?nio do cookie
     UserService.java
+- Alterar as configuracoes de tempo da sessao
+    authenticatorService
+
+
 
 java facebook connector
 oauth facebook
