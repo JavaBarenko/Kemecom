@@ -4,9 +4,9 @@
  */
 package br.rcp.wallmart.service;
 
-import br.rcp.kemecom.service.UserService;
+import br.rcp.kemecom.service.UserServiceImpl;
 import br.rcp.kemecom.helper.MongoDatastore;
-import br.rcp.kemecom.model.User;
+import br.rcp.kemecom.model.db.User;
 import com.google.code.morphia.Datastore;
 import java.util.List;
 import org.junit.AfterClass;
