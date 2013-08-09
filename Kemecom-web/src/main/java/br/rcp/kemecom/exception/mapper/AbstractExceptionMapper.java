@@ -21,16 +21,12 @@ public class AbstractExceptionMapper<T extends ApplicationException> implements 
     public Response toResponse(T exception) {
         Logger log = LoggerFactory.getLogger(getClass());
         if (log != null && log.isErrorEnabled()) {
-            log.error("Erro interceptado pelo ExceptionMapper", exception);
+            log.error("Erro interceptado pelo " + getClass().getSimpleName(), exception);
         }
 
-        Message msg = new Message(Message.Type.ERROR, exception.getMessage(), exception.getCallbackObject());
-        Response r = null;
-        try {
-            r = Response.status(exception.getHttpCode()).entity(msg).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Message msg = new Message(Message.ERROR, exception.getMessage(), exception.getCallbackObject());
+        Response r = Response.status(exception.getHttpCode()).entity(msg).build();
+
         if (log != null && log.isInfoEnabled()) {
             log.info("Response: " + r.getEntity());
         }

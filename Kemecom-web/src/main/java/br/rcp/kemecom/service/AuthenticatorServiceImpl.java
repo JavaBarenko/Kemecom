@@ -4,14 +4,12 @@
  */
 package br.rcp.kemecom.service;
 
-import br.rcp.kemecom.exception.ApplicationException;
 import br.rcp.kemecom.exception.AuthException;
 import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.Password;
 import br.rcp.kemecom.model.db.Token;
 import br.rcp.kemecom.model.db.User;
 import com.google.code.morphia.Datastore;
-import com.google.code.morphia.query.Query;
 import java.util.Date;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

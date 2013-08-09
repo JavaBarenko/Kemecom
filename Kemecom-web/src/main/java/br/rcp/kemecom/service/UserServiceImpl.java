@@ -74,11 +74,11 @@ public class UserServiceImpl implements UserService {
         try {
             ds.save(u);
         } catch (MongoException.DuplicateKey dupKey) {
-            return new Message(Message.Type.ERROR, "Não foi possível criar o novo usuário: E-Mail já cadastrado.", new User());
+            return new Message(Message.ERROR, "Não foi possível criar o novo usuário: E-Mail já cadastrado.", new User());
         }
 
         u.setPassword("");
-        return new Message(Message.Type.SUCCESS, "Usuário criado com sucesso!", u);
+        return new Message(Message.SUCCESS, "Usuário criado com sucesso!", u);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService {
 
     private User userExistsAssertion(User u) throws ApplicationException {
         if (u == null) {
-            throw new ApplicationException("O usuário não foi encontrado na base de dados").withHttpCode(204).withAjaxCallbackObject(new User());
+            throw new ApplicationException("O usuário não foi encontrado na base de dados").withHttpCode(200).withAjaxCallbackObject(new User());
         }
         return u;
     }

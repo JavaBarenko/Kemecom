@@ -27,10 +27,8 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(br.rcp.kemecom.exception.mapper.ApplicationExceptionMapper.class);
         resources.add(br.rcp.kemecom.exception.mapper.AuthExceptionMapper.class);
-        resources.add(br.rcp.kemecom.exception.mapper.GenericExceptionMapper.class);
         resources.add(br.rcp.kemecom.service.AuthenticatorService.class);
         resources.add(br.rcp.kemecom.service.AuthenticatorServiceImpl.class);
-        resources.add(br.rcp.kemecom.service.UserService.class);
         resources.add(br.rcp.kemecom.service.UserServiceImpl.class);
     }
 }
