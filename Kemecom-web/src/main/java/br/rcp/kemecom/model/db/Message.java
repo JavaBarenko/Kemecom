@@ -10,22 +10,19 @@ package br.rcp.kemecom.model.db;
  */
 public class Message {
 
-    public static interface Type {
-
-        static final String SUCCESS = "SUCCESS";
-        static final String ERROR = "ERROR";
-    }
-    private String type;
+    public static final boolean SUCCESS = true;
+    public static final boolean ERROR = false;
+    private Boolean success;
     private String message;
     private Object object;
 
-    public Message(String type, String message) {
-        this.type = type;
+    public Message(Boolean success, String message) {
+        this.success = success;
         this.message = message;
     }
 
-    public Message(String type, String message, Object object) {
-        this.type = type;
+    public Message(Boolean success, String message, Object object) {
+        this.success = success;
         this.message = message;
         this.object = object;
     }
@@ -33,12 +30,12 @@ public class Message {
     public Message() {
     }
 
-    public String getType() {
-        return type;
+    public Boolean isSuccessful() {
+        return success;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {

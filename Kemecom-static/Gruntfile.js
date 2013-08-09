@@ -166,10 +166,16 @@ module.exports = function(grunt) {
                 separator: ';',
                 banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %> */'
             },
-            build: {
-                src: ['src/js/lib/polymer.min.js'],
-                dest: '<%= buildDir %>/assets/polymer.js'
-            },
+            build: [{
+                    src: ['src/js/lib/polymer.min.js'],
+                    dest: '<%= buildDir %>/assets/polymer.js'
+                }, {
+                    src: ['src/js/lib/amplify.min.js'],
+                    dest: '<%= buildDir %>/assets/amplify.js'
+                }, {
+                    src: ['src/js/lib/jquery-1.10.2.min.js'],
+                    dest: '<%= buildDir %>/assets/jquery.js'
+                }],
             dist: {
                 src: ['src/js/lib/polymer.min.js'],
                 dest: 'dist/assets/lib.js'
