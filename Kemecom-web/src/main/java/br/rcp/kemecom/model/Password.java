@@ -14,10 +14,6 @@ import org.apache.commons.lang3.RandomStringUtils;
  */
 public class Password {
 
-    public static Password generateRandom(int size) {
-        return new Password(RandomStringUtils.randomAlphanumeric(size));
-    }
-
     public static boolean equals(Password p1, Password p2) {
         if(p1 == p2){
             return true;
@@ -28,12 +24,19 @@ public class Password {
         return p1.sha512Hex.equals(p2.sha512Hex);
     }
 
-    private final String sha512Hex;
+    private String sha512Hex;
 
     @Transient
-    private final boolean valid;
+    private boolean valid;
+
+    public Password() {
+    }
 
     public Password(String password) {
+        setPassword(password);
+    }
+
+    public void setPassword(String password) {
         this.valid = isValid(password);
         this.sha512Hex = DigestUtils.sha512Hex(password);
     }

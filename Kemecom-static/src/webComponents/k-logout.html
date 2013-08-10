@@ -1,0 +1,28 @@
+<polymer-element name="k-logout">
+    <template>
+        <div class="logout">
+            <a href="#">Logout</a>
+        </div>
+    </template>
+
+    <script>
+        Polymer('k-logout', {
+            click: function() {
+                if (confirm("Deseja realmente sair?")) {
+                    amplify.request("auth:logout", {
+                        token: K.getToken()
+                    }, jQuery.proxy(function(msg, obj, isOk) {
+                        if (isOk) {
+                            K.message.showSuccess(msg);
+                        } else {
+                            K.message.showError(msg);
+                        }
+                        K.goTo('k-login');
+                    }), this);
+                }
+                ;
+                e.preventDefault();
+            }
+        });
+    </script>
+</polymer-element>

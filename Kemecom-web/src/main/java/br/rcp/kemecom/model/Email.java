@@ -12,12 +12,15 @@ public class Email {
 
     private String email;
 
+    public Email() {
+    }
+
     public Email(String email) {
         this.email = email == null ? "" : email.trim();
     }
 
     public boolean isValid() {
-        return this.email.matches("(?i)\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
+        return this.email != null && this.email.matches("(?i)\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
     }
 
     @Override

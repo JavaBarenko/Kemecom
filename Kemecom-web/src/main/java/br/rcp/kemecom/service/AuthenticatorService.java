@@ -6,19 +6,25 @@ package br.rcp.kemecom.service;
 
 import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.Password;
+import br.rcp.kemecom.model.SecurityToken;
+import br.rcp.kemecom.model.db.Message;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public interface AuthenticatorService {
 
     @POST
-    String authenticate(@FormParam(value = "email") Email email, @FormParam(value = "password") Password password);
+    Message authenticate(@FormParam(value = "email") Email email, @FormParam(value = "password") Password password);
 
     @GET
-    boolean isAuth(String token);
+    boolean isAuth(SecurityToken token);
+
+    @DELETE
+    Message logout(SecurityToken token);
 }

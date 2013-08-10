@@ -5,13 +5,14 @@
 package br.rcp.kemecom.exception;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public class ApplicationException extends RuntimeException {
 
     private Object callbackObject;
-    protected Integer httpCode = 500;
+
+    protected Integer httpCode = 200;
 
     public ApplicationException(String message, Object... params) {
         super(String.format(message, params));

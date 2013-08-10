@@ -4,16 +4,22 @@
  */
 package br.rcp.kemecom.model.db;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public class Message {
 
     public static final boolean SUCCESS = true;
+
     public static final boolean ERROR = false;
+
     private Boolean success;
+
     private String message;
+
     private Object object;
 
     public Message(Boolean success, String message) {
@@ -52,5 +58,10 @@ public class Message {
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
