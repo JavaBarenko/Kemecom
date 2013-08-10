@@ -5,7 +5,6 @@
 package br.rcp.kemecom.service;
 
 import br.rcp.kemecom.model.Email;
-import br.rcp.kemecom.interceptor.Logable;
 import br.rcp.kemecom.model.Password;
 import br.rcp.kemecom.model.SecurityToken;
 import br.rcp.kemecom.model.db.Address;

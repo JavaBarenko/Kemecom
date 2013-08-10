@@ -4,7 +4,6 @@
  */
 package br.rcp.kemecom.exception.mapper;
 
-import br.rcp.kemecom.exception.ApplicationException;
 import br.rcp.kemecom.model.db.Message;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -12,24 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
-public class AbstractExceptionMapper<T extends ApplicationException> implements ExceptionMapper<T> {
+public abstract class AbstractExceptionMapper<T extends Throwable> implements ExceptionMapper<T> {
 
-    @Override
-    public Response toResponse(T exception) {
+    protected Response toResponse(T exception, Integer httpCode, Message message) {
         Logger log = LoggerFactory.getLogger(getClass());
-        if (log != null && log.isErrorEnabled()) {
+        if(log.isErrorEnabled()){
             log.error("Erro interceptado pelo " + getClass().getSimpleName(), exception);
+            log.info("Response: " + message);
         }
-
-        Message msg = new Message(Message.ERROR, exception.getMessage(), exception.getCallbackObject());
-        Response r = Response.status(exception.getHttpCode()).entity(msg).build();
-
-        if (log != null && log.isInfoEnabled()) {
-            log.info("Response: " + r.getEntity());
-        }
-        return r;
+        return Response.status(httpCode).entity(message).build();
     }
 }

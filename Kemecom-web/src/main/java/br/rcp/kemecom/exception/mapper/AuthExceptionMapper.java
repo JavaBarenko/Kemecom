@@ -12,5 +12,5 @@ import javax.ws.rs.ext.Provider;
  * @author barenko
  */
 @Provider
-public class AuthExceptionMapper extends AbstractExceptionMapper<AuthException> {
+public class AuthExceptionMapper extends AbstractApplicationExceptionMapper<AuthException> {
 }

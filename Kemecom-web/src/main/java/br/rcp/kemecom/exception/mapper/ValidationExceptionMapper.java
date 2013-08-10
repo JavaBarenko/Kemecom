@@ -4,13 +4,13 @@
  */
 package br.rcp.kemecom.exception.mapper;
 
-import br.rcp.kemecom.exception.ApplicationException;
+import com.google.code.morphia.query.ValidationException;
 import javax.ws.rs.ext.Provider;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 @Provider
-public class ApplicationExceptionMapper extends AbstractApplicationExceptionMapper<ApplicationException> {
+public class ValidationExceptionMapper extends AbstractGenericExceptionMapper<ValidationException> {
 }

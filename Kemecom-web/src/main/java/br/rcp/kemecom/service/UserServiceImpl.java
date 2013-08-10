@@ -29,14 +29,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 @Logable
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
@@ -44,11 +43,13 @@ import org.slf4j.LoggerFactory;
 @Path("/ws/user")
 public class UserServiceImpl implements UserService {
 
-    private Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     @Inject
     private Datastore ds;
+
     @Inject
     private EmailSender emailSender;
+
+    //Utilizado no Interceptor de Login para poder validar o token!
     @Context
     private HttpServletRequest request;
 
@@ -63,22 +64,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(@PathParam("id") ObjectId id) {
         User u = userExistsAssertion(ds.get(User.class, id));
-        u.setPassword("");
-        return u;
+        return u.withoutPassword();
     }
 
     @Override
     public Message addUser(@FormParam("email") Email email, @FormParam("password") Password password) {
-        User u = new User(email.toString());
-        u.setPassword(password.toSha512Hex());
-        try {
+        User u = new User(email);
+        u.setPassword(password);
+        try{
             ds.save(u);
-        } catch (MongoException.DuplicateKey dupKey) {
-            return new Message(Message.ERROR, "Não foi possível criar o novo usuário: E-Mail já cadastrado.", new User());
+        }catch(MongoException.DuplicateKey dupKey){
+            throw new ApplicationException(dupKey, "Não foi possível criar o novo usuário: E-Mail já cadastrado.").withAjaxCallbackObject(new User(u.getEmail()));
         }
 
-        u.setPassword("");
-        return new Message(Message.SUCCESS, "Usuário criado com sucesso!", u);
+        return new Message(Message.SUCCESS, "Usuário criado com sucesso!", u.withoutPassword());
     }
 
     @Override
@@ -86,12 +85,11 @@ public class UserServiceImpl implements UserService {
     public User updateUser(@PathParam("id") ObjectId id, @FormParam("email") Email email, @FormParam("email") Address address) {
         User u = userExistsAssertion(ds.get(User.class, id));
 
-        u.setEmail(email.toString());
+        u.setEmail(email);
         u.setAddress(address);
         ds.save(u);
 
-        u.setPassword("");
-        return u;
+        return u.withoutPassword();
     }
 
     @Override
@@ -99,8 +97,7 @@ public class UserServiceImpl implements UserService {
     public User removeUser(@PathParam("id") ObjectId id) {
         User u = userExistsAssertion(ds.get(User.class, id));
         ds.delete(u);
-        u.setPassword("");
-        return u;
+        return u.withoutPassword();
     }
 
     @Override
@@ -115,41 +112,41 @@ public class UserServiceImpl implements UserService {
     public Response updatePassword(@PathParam("id") ObjectId id, Password currentPassword, Password newPassword) {
         User u = userExistsAssertion(ds.get(User.class, id));
 
-        if (!u.getPassword().equals(currentPassword.toSha512Hex())) {
+        if(!Password.equals(u.getPassword(), currentPassword)){
             throw new AuthException("A senha atual não confere!");
         }
 
-        ds.update(u, ds.createUpdateOperations(User.class).set("password", newPassword.toSha512Hex()));
+        ds.update(u, ds.createUpdateOperations(User.class).set("password", newPassword));
 
         return Response.ok().build();
     }
 
     @Override
     public Response sendRememberPassword(@FormParam("email") Email email) {
-        User u = userExistsAssertion(ds.find(User.class, "email", email.toString()).get());
+        User u = userExistsAssertion(ds.find(User.class, "email", email).get());
 
         Password pwd = Password.generateRandom(10);
 
-        try {
+        try{
             emailSender.createEmail()
                     .setHtmlMsg(String.format("<html><h1>Kemecom</h1><br>Sua nova senha é %s</html>", pwd))
                     .setTextMsg(String.format("Kemecom: Sua nova senha é %s", pwd))
-                    .addTo(u.getEmail(), u.getEmail())
+                    .addTo(u.getEmail().toString(), u.getEmail().toString())
                     .setFrom("admin@keme.com", "Kemecom")
                     .setSubject("[KEMECOM] Sua nova senha chegou")
                     .send();
 
-            u.setPassword(pwd.toSha512Hex());
+            u.setPassword(pwd);
             ds.save(u);
-        } catch (Exception e) {
-            throw new ApplicationException("Desculpe, não foi possível resetar sua senha. Tente mais tarde.").withAjaxCallbackObject(new User());
+        }catch(Exception e){
+            throw new ApplicationException(e, "Desculpe, não foi possível resetar sua senha. Tente mais tarde.").withAjaxCallbackObject(new User());
         }
 
         return Response.ok().build();
     }
 
     private User userExistsAssertion(User u) throws ApplicationException {
-        if (u == null) {
+        if(u == null){
             throw new ApplicationException("O usuário não foi encontrado na base de dados").withHttpCode(200).withAjaxCallbackObject(new User());
         }
         return u;

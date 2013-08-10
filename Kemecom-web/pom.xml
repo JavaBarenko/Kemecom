@@ -13,11 +13,11 @@
     <packaging>war</packaging>
 
     <name>Kemecom-web</name>
-
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.deploy.server>JBoss4</netbeans.hint.deploy.server>
+        <resteasy.version>2.2.3.GA</resteasy.version>
     </properties>
 
     <dependencies>
@@ -41,7 +41,13 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
-            <version>3.0.2.Final</version>
+            <version>${resteasy.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
+            <version>${resteasy.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -129,6 +135,14 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                        <manifestEntries>
+                            <Dependencies>
+                                org.jboss.resteasy.resteasy-jaxrs,
+                                org.jboss.resteasy.resteasy-cdi
+                            </Dependencies>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
