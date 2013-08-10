@@ -26,8 +26,8 @@ import org.joda.time.Instant;
 import org.joda.time.Minutes;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 @ApplicationScoped
 @Produces({MediaType.APPLICATION_JSON})
@@ -37,8 +37,10 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
     @Inject
     private Datastore ds;
+
     @Context
     private HttpServletRequest request;
+
     private Integer sessionDurationInMinutes = 30;
 
     public AuthenticatorServiceImpl() {
@@ -53,7 +55,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
     public String authenticate(@FormParam("email") Email email, @FormParam("password") Password password) {
         User u = ds.find(User.class).field("email").equal(email.toString()).get();
 
-        if (u == null || !u.getPassword().equals(password.toSha512Hex())) {
+        if(u == null || !u.getPassword().equals(password)){
             throw new AuthException("E-Mail ou senha inválido(s)!");
         }
 
@@ -73,22 +75,22 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
     @Override
     public boolean isAuth(String token) {
-        if (StringUtils.isEmpty(token)) {
+        if(StringUtils.isEmpty(token)){
             throw new AuthException("O token está vazio!");
         }
 
         Token tk = ds.find(Token.class).field("id").equal(new ObjectId(token)).get();
 
-        if (tk == null) {
+        if(tk == null){
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
 
-        if (sessionDurationInMinutes >= Minutes.minutesBetween(Instant.now(), new Instant(tk.getLastAccessedAt())).getMinutes()) {
+        if(sessionDurationInMinutes >= Minutes.minutesBetween(Instant.now(), new Instant(tk.getLastAccessedAt())).getMinutes()){
             ds.delete(tk);
             throw new AuthException("Token expirado, efetue o login novamente!").withHttpCode(419);
         }
 
-        if (!request.getRemoteAddr().equals(tk.getIpAddress())) {
+        if(!request.getRemoteAddr().equals(tk.getIpAddress())){
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
 

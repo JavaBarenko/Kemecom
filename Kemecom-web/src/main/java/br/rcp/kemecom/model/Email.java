@@ -5,19 +5,23 @@
 package br.rcp.kemecom.model;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public class Email {
 
     private String email;
 
-    public Email(String tokenId) {
-        this.email = tokenId;
+    public Email(String email) {
+        this.email = email == null ? "" : email.trim();
+    }
+
+    public boolean isValid() {
+        return this.email.matches("(?i)\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
     }
 
     @Override
     public String toString() {
-        return email != null ? email.toLowerCase().trim() : "";
+        return email;
     }
 }

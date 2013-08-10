@@ -8,25 +8,33 @@ import br.rcp.kemecom.model.Email;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Version;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 @Entity("auth")
 public class Token {
 
     @Id
     private ObjectId id;
+
+    @Version
+    Long version;
+
     @NotNull
     private String ipAddress;
+
     @NotNull
     @Indexed(unique = true, dropDups = true, name = "auth_unique_email")
     private String email;
+
     private Date createdAt;
+
     private Date lastAccessedAt;
 
     public Token() {

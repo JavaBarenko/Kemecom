@@ -19,27 +19,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public class Resources {
 
     private Logger log = LoggerFactory.getLogger(Resources.class);
-    @SuppressWarnings("unused")
+
     @Produces
     @ApplicationScoped
     private Datastore ds;
-    @SuppressWarnings("unused")
+
     @Produces
     @ApplicationScoped
     private Memcached memcached;
-    @SuppressWarnings("unused")
+
     @Produces
     @ApplicationScoped
     private EmailSender emailSender;
 
     public Resources() throws Exception {
-        if (log.isInfoEnabled()) {
+        if(log.isInfoEnabled()){
             log.info("Carregando recursos ...");
         }
 
@@ -47,7 +47,7 @@ public class Resources {
         loadDatastore();
         loadEmailSender();
 
-        if (log.isInfoEnabled()) {
+        if(log.isInfoEnabled()){
             log.info("Recursos carregados com sucesso!");
         }
     }

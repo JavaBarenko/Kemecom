@@ -4,35 +4,42 @@
  */
 package br.rcp.kemecom.model.db;
 
+import br.rcp.kemecom.model.Email;
+import br.rcp.kemecom.model.Password;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
-import javax.validation.constraints.NotNull;
+import com.google.code.morphia.annotations.Version;
 import org.bson.types.ObjectId;
-import org.hibernate.validator.constraints.Email;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 @Entity("users")
 public class User {
 
     @Id
     private ObjectId id;
+
+    @Version
+    Long version;
+
     @Indexed(name = "unique_email", dropDups = true, unique = true)
-    @NotNull
-    @Email
-    private String email;
-    private String password;
+    @br.rcp.kemecom.model.validator.Email
+    private Email email;
+
+    @br.rcp.kemecom.model.validator.Password
+    private Password password;
+
     @Embedded
     private Address address;
 
     public User() {
     }
 
-    public User(String email) {
+    public User(Email email) {
         this.email = email;
     }
 
@@ -52,20 +59,25 @@ public class User {
         this.id = id;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(Password password) {
         this.password = password;
+    }
+
+    public User withoutPassword() {
+        this.password = null;
+        return this;
     }
 
     @Override
@@ -77,17 +89,17 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if(obj == null){
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if(getClass() != obj.getClass()){
             return false;
         }
         final User other = (User) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+        if(this.id != other.id && (this.id == null || !this.id.equals(other.id))){
             return false;
         }
-        if ((this.email == null) ? (other.email != null) : !this.email.equals(other.email)) {
+        if((this.email == null) ? (other.email != null) : !this.email.equals(other.email)){
             return false;
         }
         return true;
