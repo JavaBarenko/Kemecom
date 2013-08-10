@@ -34,14 +34,14 @@
                 amplify.request("user:addUser", {
                     email: this.$.email.value,
                     password: this.$.password.value
-                }, jQuery.proxy(function(msg) {
-                    if (msg.type === 'SUCCESS') {
+                }, jQuery.proxy(function(msg, obj, isOk) {
+                    if (isOk) {
                         K.message.showSuccess(msg.message);
                         K.goTo('k-login');
                     } else {
                         K.message.showError(msg.message);
-                        this.$.email.value = msg.object.email;
-                        this.$.password.value = msg.object.password;
+                        this.$.email.value = "";
+                        this.$.password.value = "";
                     }
                 }, this));
             },

@@ -7,12 +7,13 @@ package br.rcp.kemecom.interceptor;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 @Logable
 @Interceptor
@@ -23,9 +24,9 @@ public class LoggingInterceptor extends AbstractAOPInterceptor {
 
         Logger logger = LoggerFactory.getLogger(getClassName(ctx));
 
-        if (logger.isInfoEnabled()) {
+        if(logger.isInfoEnabled()){
             String params = "";
-            if (ctx.getParameters().length > 0) {
+            if(ctx.getParameters().length > 0){
                 params = " com os argumentos: " + getParameters(ctx);
             }
             logger.info("Chamada ao metodo " + ctx.getMethod() + params + " ...");
@@ -33,12 +34,12 @@ public class LoggingInterceptor extends AbstractAOPInterceptor {
 
         Object theReturn = ctx.proceed();
 
-        if (logger.isInfoEnabled()) {
+        if(logger.isInfoEnabled()){
             String returnLog = "Chamada ao metodo " + ctx.getMethod() + " retornou";
-            if (isMethodType(ctx, Void.class)) {
+            if(isMethodType(ctx, Void.class)){
                 logger.info(returnLog);
-            } else {
-                logger.info(returnLog + ": " + theReturn);
+            }else{
+                logger.info(returnLog + ": " + ToStringBuilder.reflectionToString(theReturn));
             }
         }
         return theReturn;

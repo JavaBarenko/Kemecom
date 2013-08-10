@@ -31,7 +31,19 @@
                 K.goTo("k-remember-password");
             },
             login: function() {
-                alert("faz ajax para login");
+                amplify.request("auth:login", {
+                    email: this.$.email.value,
+                    password: this.$.password.value
+                }, jQuery.proxy(function(msg, obj, isOk) {
+                    if (isOk) {
+                        K.message.showSuccess(msg);
+                        K.setToken(obj);
+                        K.goTo('k-welcome');
+                    } else {
+                        K.message.showError(msg);
+                        K.goTo('k-login');
+                    }
+                }), this);
             },
             register: function() {
                 K.goTo("k-sign-in");

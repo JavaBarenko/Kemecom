@@ -16,6 +16,7 @@ import br.rcp.kemecom.model.db.Address;
 import br.rcp.kemecom.model.db.Message;
 import br.rcp.kemecom.model.db.User;
 import com.google.code.morphia.Datastore;
+import com.google.code.morphia.query.ValidationException;
 import com.mongodb.MongoException;
 import java.util.List;
 import javax.inject.Inject;
@@ -29,9 +30,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  <p/>
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 @Logable
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED})
-@Produces({MediaType.APPLICATION_JSON})
+@Produces(MediaType.APPLICATION_JSON)
 @Path("/ws/user")
 public class UserServiceImpl implements UserService {
 
@@ -73,6 +73,8 @@ public class UserServiceImpl implements UserService {
         u.setPassword(password);
         try{
             ds.save(u);
+        }catch(ValidationException v){
+            throw new ApplicationException(v).withAjaxCallbackObject(new User(u.getEmail()));
         }catch(MongoException.DuplicateKey dupKey){
             throw new ApplicationException(dupKey, "Não foi possível criar o novo usuário: E-Mail já cadastrado.").withAjaxCallbackObject(new User(u.getEmail()));
         }
@@ -109,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secure
-    public Response updatePassword(@PathParam("id") ObjectId id, Password currentPassword, Password newPassword) {
+    public Message updatePassword(@PathParam("id") ObjectId id, Password currentPassword, Password newPassword) {
         User u = userExistsAssertion(ds.get(User.class, id));
 
         if(!Password.equals(u.getPassword(), currentPassword)){
@@ -118,14 +120,14 @@ public class UserServiceImpl implements UserService {
 
         ds.update(u, ds.createUpdateOperations(User.class).set("password", newPassword));
 
-        return Response.ok().build();
+        return new Message(Message.SUCCESS, "Senha alterada com sucesso!");
     }
 
     @Override
-    public Response sendRememberPassword(@FormParam("email") Email email) {
+    public Message sendRememberPassword(@FormParam("email") Email email) {
         User u = userExistsAssertion(ds.find(User.class, "email", email).get());
 
-        Password pwd = Password.generateRandom(10);
+        String pwd = RandomStringUtils.randomAlphanumeric(10);
 
         try{
             emailSender.createEmail()
@@ -136,13 +138,13 @@ public class UserServiceImpl implements UserService {
                     .setSubject("[KEMECOM] Sua nova senha chegou")
                     .send();
 
-            u.setPassword(pwd);
+            u.setPassword(new Password(pwd));
             ds.save(u);
         }catch(Exception e){
             throw new ApplicationException(e, "Desculpe, não foi possível resetar sua senha. Tente mais tarde.").withAjaxCallbackObject(new User());
         }
 
-        return Response.ok().build();
+        return new Message(Message.SUCCESS, "Senha resetada com sucesso! Em instantes você receberá um email com sua nova senha.");
     }
 
     private User userExistsAssertion(User u) throws ApplicationException {

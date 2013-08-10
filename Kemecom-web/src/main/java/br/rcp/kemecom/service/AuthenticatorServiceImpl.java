@@ -7,6 +7,8 @@ package br.rcp.kemecom.service;
 import br.rcp.kemecom.exception.AuthException;
 import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.Password;
+import br.rcp.kemecom.model.SecurityToken;
+import br.rcp.kemecom.model.db.Message;
 import br.rcp.kemecom.model.db.Token;
 import br.rcp.kemecom.model.db.User;
 import com.google.code.morphia.Datastore;
@@ -20,8 +22,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.lang3.StringUtils;
-import org.bson.types.ObjectId;
 import org.joda.time.Instant;
 import org.joda.time.Minutes;
 
@@ -52,10 +52,10 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
     }
 
     @Override
-    public String authenticate(@FormParam("email") Email email, @FormParam("password") Password password) {
-        User u = ds.find(User.class).field("email").equal(email.toString()).get();
+    public Message authenticate(@FormParam("email") Email email, @FormParam("password") Password password) {
+        User u = ds.find(User.class, "email", email).get();
 
-        if(u == null || !u.getPassword().equals(password)){
+        if(u == null || !Password.equals(u.getPassword(), password)){
             throw new AuthException("E-Mail ou senha inválido(s)!");
         }
 
@@ -66,31 +66,31 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
         ds.save(tk);
 
-        return tk.getId().toString();
+        return new Message(Message.SUCCESS, "Autenticado com sucesso!", tk.getId().toString());
     }
 
     private void invalidateCurrentTokens(Email email) {
-        ds.findAndDelete(ds.createQuery(Token.class).field("email").equal(email.toString()));
+        ds.findAndDelete(ds.createQuery(Token.class).field("email").equal(email));
     }
 
     @Override
-    public boolean isAuth(String token) {
-        if(StringUtils.isEmpty(token)){
-            throw new AuthException("O token está vazio!");
+    public boolean isAuth(SecurityToken token) {
+        if(token == null || !token.isValid()){
+            throw new AuthException("Token inválido, efetue o login novamente!");
         }
 
-        Token tk = ds.find(Token.class).field("id").equal(new ObjectId(token)).get();
+        Token tk = ds.get(Token.class, token.getTokenId());
 
         if(tk == null){
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
 
-        if(sessionDurationInMinutes >= Minutes.minutesBetween(Instant.now(), new Instant(tk.getLastAccessedAt())).getMinutes()){
+        if(isExpired(tk)){
             ds.delete(tk);
             throw new AuthException("Token expirado, efetue o login novamente!").withHttpCode(419);
         }
 
-        if(!request.getRemoteAddr().equals(tk.getIpAddress())){
+        if(isADiferentIPAddress(tk)){
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
 
@@ -98,5 +98,19 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
         ds.save(tk);
 
         return true;
+    }
+
+    @Override
+    public Message logout(@FormParam("token") SecurityToken token) {
+        ds.delete(Token.class, token.getTokenId());
+        return new Message(Message.SUCCESS, "Usuário deslogado com sucesso");
+    }
+
+    private boolean isExpired(Token tk) {
+        return sessionDurationInMinutes >= Minutes.minutesBetween(Instant.now(), new Instant(tk.getLastAccessedAt())).getMinutes();
+    }
+
+    private boolean isADiferentIPAddress(Token tk) {
+        return !request.getRemoteAddr().equals(tk.getIpAddress());
     }
 }

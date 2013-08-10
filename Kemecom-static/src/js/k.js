@@ -11,6 +11,14 @@
         K.goTo(homeTagName);
     };
 
+    var token;
+    K.setToken = function(tk) {
+        token = tk;
+    };
+
+    K.getToken = function() {
+        return token;
+    };
 
     function loadContent(jquerySelector, $webComponent, fadeSpeed) {
         var content = $(jquerySelector);

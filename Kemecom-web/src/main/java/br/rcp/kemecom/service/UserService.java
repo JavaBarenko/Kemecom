@@ -16,21 +16,21 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.bson.types.ObjectId;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public interface UserService {
 
     static final String SECURITY_TOKEN = "kemecom";
 
-    @PUT
+    //com @PUT nao funciona! Da o erro: Request media type is not application/x-www-form-urlencoded
+    @POST
     Message addUser(@FormParam(value = "email") Email email, @FormParam(value = "password") Password password);
 
     @GET
@@ -46,11 +46,11 @@ public interface UserService {
 
     @POST
     @Path(value = "/reset/password")
-    Response sendRememberPassword(@FormParam(value = "email") Email email);
+    Message sendRememberPassword(@FormParam(value = "email") Email email);
 
     @POST
     @Path(value = "/{id}/password")
-    Response updatePassword(@PathParam(value = "id") ObjectId id, Password currentPassword, Password newPassword);
+    Message updatePassword(@PathParam(value = "id") ObjectId id, Password currentPassword, Password newPassword);
 
     @POST
     @Path(value = "/{id}")
