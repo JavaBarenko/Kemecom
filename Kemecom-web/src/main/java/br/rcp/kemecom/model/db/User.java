@@ -12,13 +12,17 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Version;
 import org.bson.types.ObjectId;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  <p/>
  @author barenko
  */
-@Entity("users")
+@Entity(value = "users", noClassnameStored = true)
 public class User {
+
+    public static final String CURRENT_USER = "CurrentUser";
 
     @Id
     private ObjectId id;
@@ -43,6 +47,7 @@ public class User {
         this.email = email;
     }
 
+    @JsonProperty("address")
     public Address getAddress() {
         return address;
     }
@@ -51,14 +56,21 @@ public class User {
         this.address = address;
     }
 
+    @JsonIgnore
     public ObjectId getId() {
         return id;
+    }
+
+    @JsonProperty("id")
+    public String getSerializedId() {
+        return id == null ? null : id.toString();
     }
 
     public void setId(ObjectId id) {
         this.id = id;
     }
 
+    @JsonProperty("email")
     public Email getEmail() {
         return email;
     }
@@ -67,6 +79,7 @@ public class User {
         this.email = email;
     }
 
+    @JsonProperty("password")
     public Password getPassword() {
         return password;
     }
@@ -76,8 +89,19 @@ public class User {
     }
 
     public User withoutPassword() {
-        this.password = null;
-        return this;
+        User u = clone();
+        u.setPassword(null);
+        return u;
+    }
+
+    @Override
+    protected User clone() {
+        User u = new User();
+        u.setAddress(address);
+        u.setEmail(email);
+        u.setId(id);
+        u.setPassword(password);
+        return u;
     }
 
     @Override
@@ -103,5 +127,18 @@ public class User {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("{");
+        if(id != null)
+            sb.append("id:'").append(id.toString()).append("', ");
+        if(email != null)
+            sb.append("id:'").append(email.toString()).append("', ");
+        if(address != null)
+            sb.append("address:").append(address.toString()).append(", ");
+        sb.append("}");
+        return sb.toString();
     }
 }

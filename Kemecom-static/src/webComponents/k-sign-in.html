@@ -18,7 +18,7 @@
                 </p>
                 <p>
                     <label for="password2">Senha:&nbsp;</label>
-                    <input type="password2" id="password2" placeholder="Confirmação de Senha" maxlength="20">
+                    <input type="password" id="password2" placeholder="Confirmação de Senha" maxlength="20">
                 </p>
                 <p>
                     <button on-click="signin">Criar conta!</button>
@@ -31,19 +31,29 @@
     <script>
         Polymer('k-sign-in', {
             signin: function() {
-                amplify.request("user:addUser", {
-                    email: this.$.email.value,
-                    password: this.$.password.value
-                }, jQuery.proxy(function(msg, obj, isOk) {
-                    if (isOk) {
-                        K.message.showSuccess(msg.message);
+                jQuery.ajax({
+                    url: "/Kemecom-web/ws/user/new",
+                    dataType: "json",
+                    type: "POST",
+                    context: this,
+                    data: {
+                        email: this.$.email.value,
+                        password: this.$.password.value
+                    }
+                }).done(function(data, status, xhr) {
+                    if (data.successful) {
+                        K.message.showSuccess(data.message);
                         K.goTo('k-login');
                     } else {
-                        K.message.showError(msg.message);
+                        K.message.showError(data.message);
                         this.$.email.value = "";
                         this.$.password.value = "";
                     }
-                }, this));
+                }).fail(function(xhr, error, errorMsg) {
+                    K.message.showError('Erro [' + error + "]:" + errorMsg);
+                    this.$.email.value = "";
+                    this.$.password.value = "";
+                });
             },
             cancel: function() {
                 K.goTo('k-login');

@@ -1,20 +1,42 @@
 <polymer-element name="k-profile">
     <template>
-        <section>
-            <h3>Bem vindo, {{ email }}!</h3>
+        <link rel="stylesheet" href="../assets/k-profile.css" />
+        <section class="profile">
+            <h3>Bem vindo!</h3>
             <article>
-                <input id="email" type="email" placeholder="E-Mail" readonly>
-                <div>
-                    <input id="zipCode" type="number" maxlength="9" placeholder="CEP" on-input="validateZipCode">
-                    <input id="address" maxlength="120" placeholder="Logradouro">
-                    <input id="number" maxlength="6" placeholder="Número">
-                    <input id="neighbor" maxlength="32" placeholder="Bairro">
-                    <input id="city" maxlength="32" placeholder="Cidade">
-                    <input id="state" maxlength="2" placeholder="Estado">
-                </div>
+                <p>
+                <h4>E-Mail</h4>
+                <label id="email"></label>
+                </p>
+                <h4>Endereço</h4>
+                <article class="address">
+                    <p>
+                        <label for="zipCode">CEP:&nbsp;</label>
+                        <input id="zipCode" type="text" maxlength="9" placeholder="CEP" on-input="validateZipCode" readonly="">
+                    </p>
+                    <p>
+                        <label for="address">Logradouro:&nbsp;</label>
+                        <input id="address" maxlength="120" placeholder="Logradouro" readonly="">
+                        <input id="number" maxlength="6" placeholder="Número" readonly="">
+                    </p>
+                    <p>
+                        <label for="neighbor">Bairro:&nbsp;</label>
+                        <input id="neighbor" maxlength="32" placeholder="Bairro" readonly="">
+                    </p>
+                    <p>
+                        <label for="city">Cidade:&nbsp;</label>
+                        <input id="city" maxlength="32" placeholder="Cidade" readonly="">
+                    </p>
+                    <p>
+                        <label for="state">Estado:&nbsp;</label>
+                        <input id="state" maxlength="2" placeholder="Estado" readonly="">
+                    </p>
+                </article>
                 <p>
                     <button id="update" on-click="update">Alterar</button>
                     <button id="save" on-click="save" style="display: none">Salvar</button>
+                    <button id="changePassword" on-click="updatePassword">Alterar Senha</button>
+                    <button id="removeAccount" on-click="removeAccount">Excluir conta</button>
                 </p>
             </article>
         </section>
@@ -26,12 +48,109 @@
                 alert(1);
             },
             update: function() {
+                this.$.zipCode.readOnly = false;
+                this.$.number.readOnly = false;
 
+                this.$.update.style.display = "none";
+                this.$.save.style.display = "block";
             },
             save: function() {
+                this.$.zipCode.readOnly = true;
+                this.$.number.readOnly = true;
 
+                jQuery.ajax({
+                    url: "/Kemecom-web/ws/user/address",
+                    dataType: "json",
+                    type: "POST",
+                    data: {
+                        address: {
+                            zipCode: this.$.zipCode.value,
+                            number: this.$.number.value,
+                            address: this.$.address.value,
+                            city: this.$.city.value,
+                            neighbor: this.$.neighbor.value,
+                            state: this.$.state.value
+                        }
+                    },
+                    beforeSend: function(xhr, settings) {
+                        xhr.setRequestHeader('KemecomToken', K.getToken());
+                    }
+                }).done(function(data, status, xhr) {
+                    if (data.successful) {
+                        K.message.showSuccess(data.message);
+
+                        this.$.update.style.display = "block";
+                        this.$.save.style.display = "none";
+                    } else {
+                        K.message.showError(data.message);
+                        this.$.zipCode.readOnly = false;
+                        this.$.number.readOnly = false;
+                    }
+                }).fail(function(xhr, error, errorMsg) {
+                    K.message.showError('Erro [' + error + "]:" + errorMsg);
+                    this.$.zipCode.readOnly = false;
+                    this.$.number.readOnly = false;
+                });
+            },
+            changePassword: function() {
+                K.goTo('update-password');
+            },
+            removeAccount: function() {
+                if (confirm("Tem certeza que quer excluir a conta?")) {
+                    jQuery.ajax({
+                        url: "/Kemecom-web/ws/user",
+                        dataType: "json",
+                        type: "DELETE",
+                        data: {
+                            email: this.$.email.value,
+                            address: this.$.password.value
+                        },
+                        beforeSend: function(xhr, settings) {
+                            xhr.setRequestHeader('KemecomToken', K.getToken());
+                        }
+                    }).done(function(data, status, xhr) {
+                        if (data.successful) {
+                            K.message.showSuccess(data.message);
+                            K.setToken('');
+                            K.goTo('k-login');
+                        } else {
+                            K.message.showError(data.message);
+                        }
+                    }).fail(function(xhr, error, errorMsg) {
+                        K.message.showError('Erro [' + error + "]:" + errorMsg);
+                    });
+                }
+                ;
+            },
+            ready: function() {
+                jQuery.ajax({
+                    url: "/Kemecom-web/ws/user/me",
+                    dataType: "json",
+                    type: "GET",
+                    context: this,
+                    beforeSend: function(xhr, settings) {
+                        xhr.setRequestHeader('KemecomToken', K.getToken());
+                    }
+                }).done(function(data, status, xhr) {
+                    if (data.successful) {
+                        this.$.email.textContent = data.object.email.email;
+                        if (data.address) {
+                            this.$.zipCode.value = data.address.zipcode;
+                            this.$.address.value = data.address.street;
+                            this.$.number.value = data.address.number;
+                            this.$.neighbor.value = data.address.neighbor;
+                            this.$.city.value = data.address.city;
+                            this.$.state.value = data.address.state;
+                        }
+                    } else {
+                        K.message.showError(data.message);
+                        K.goTo('k-login');
+                    }
+                }).fail(function(xhr, error, errorMsg) {
+                    K.message.showError('Erro [' + error + "]:" + errorMsg);
+                    K.goTo('k-login');
+                });
             }
-
         });
     </script>
 </polymer-element>

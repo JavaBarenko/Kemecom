@@ -11,7 +11,6 @@ import br.rcp.kemecom.interceptor.Logable;
 import br.rcp.kemecom.interceptor.Secure;
 import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.Password;
-import br.rcp.kemecom.model.SecurityToken;
 import br.rcp.kemecom.model.db.Address;
 import br.rcp.kemecom.model.db.Message;
 import br.rcp.kemecom.model.db.User;
@@ -21,17 +20,10 @@ import com.mongodb.MongoException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.bson.types.ObjectId;
 
 /**
  <p/>
@@ -62,9 +54,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(@PathParam("id") ObjectId id) {
-        User u = userExistsAssertion(ds.get(User.class, id));
-        return u.withoutPassword();
+    @Secure
+    public Message getMe() {
+        User u = getCurrentUser().withoutPassword();
+        return Message.ok("", u);
     }
 
     @Override
@@ -79,40 +72,37 @@ public class UserServiceImpl implements UserService {
             throw new ApplicationException(dupKey, "Não foi possível criar o novo usuário: E-Mail já cadastrado.").withAjaxCallbackObject(new User(u.getEmail()));
         }
 
-        return new Message(Message.SUCCESS, "Usuário criado com sucesso!", u.withoutPassword());
+        return Message.ok("Usuário criado com sucesso!", u.withoutPassword());
     }
 
     @Override
     @Secure
-    public User updateUser(@PathParam("id") ObjectId id, @FormParam("email") Email email, @FormParam("email") Address address) {
-        User u = userExistsAssertion(ds.get(User.class, id));
-
-        u.setEmail(email);
+    public Message updateAddress(@FormParam("address") Address address) {
+        User u = getCurrentUser();
         u.setAddress(address);
         ds.save(u);
 
-        return u.withoutPassword();
+        return Message.ok("Endereço atualizado com sucesso!", u.withoutPassword());
     }
 
     @Override
     @Secure
-    public User removeUser(@PathParam("id") ObjectId id) {
-        User u = userExistsAssertion(ds.get(User.class, id));
-        ds.delete(u);
-        return u.withoutPassword();
+    public Message removeUser() {
+        ds.delete(getCurrentUser());
+        return Message.ok("Usuário excluído com sucesso!");
     }
 
     @Override
     @Secure
-    public List<User> getUsers(@CookieParam(SECURITY_TOKEN) SecurityToken security) {
+    public Message getUsers() {
         List<User> users = ds.createQuery(User.class).retrievedFields(false, "password").order("email").asList();
-        return users;
+        return Message.ok("", users);
     }
 
     @Override
     @Secure
-    public Message updatePassword(@PathParam("id") ObjectId id, Password currentPassword, Password newPassword) {
-        User u = userExistsAssertion(ds.get(User.class, id));
+    public Message updatePassword(Password currentPassword, Password newPassword) {
+        User u = getCurrentUser();
 
         if(!Password.equals(u.getPassword(), currentPassword)){
             throw new AuthException("A senha atual não confere!");
@@ -120,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
         ds.update(u, ds.createUpdateOperations(User.class).set("password", newPassword));
 
-        return new Message(Message.SUCCESS, "Senha alterada com sucesso!");
+        return Message.ok("Senha alterada com sucesso!");
     }
 
     @Override
@@ -144,7 +134,7 @@ public class UserServiceImpl implements UserService {
             throw new ApplicationException(e, "Desculpe, não foi possível resetar sua senha. Tente mais tarde.").withAjaxCallbackObject(new User());
         }
 
-        return new Message(Message.SUCCESS, "Senha resetada com sucesso! Em instantes você receberá um email com sua nova senha.");
+        return Message.ok("Senha resetada com sucesso! Em instantes você receberá um email com sua nova senha.");
     }
 
     private User userExistsAssertion(User u) throws ApplicationException {
@@ -152,5 +142,9 @@ public class UserServiceImpl implements UserService {
             throw new ApplicationException("O usuário não foi encontrado na base de dados").withHttpCode(200).withAjaxCallbackObject(new User());
         }
         return u;
+    }
+
+    private User getCurrentUser() {
+        return (User) request.getAttribute(User.CURRENT_USER);
     }
 }

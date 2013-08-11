@@ -6,7 +6,8 @@ package br.rcp.kemecom.model;
 
 import com.google.code.morphia.annotations.Transient;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  <p/>
@@ -26,6 +27,10 @@ public class Password {
 
     private String sha512Hex;
 
+    //TODO remover esse campo de teste depois....
+    @Transient
+    private String password;
+
     @Transient
     private boolean valid;
 
@@ -37,11 +42,13 @@ public class Password {
     }
 
     public void setPassword(String password) {
+        this.password = password;
         this.valid = isValid(password);
         this.sha512Hex = DigestUtils.sha512Hex(password);
     }
 
     @Override
+    @JsonProperty("sha512Hex")
     public String toString() {
         return sha512Hex == null ? "" : sha512Hex.trim();
     }
@@ -55,6 +62,7 @@ public class Password {
         return sha512Hex.equals(((Password) other).sha512Hex);
     }
 
+    @JsonIgnore
     public boolean isValid() {
         return valid;
     }

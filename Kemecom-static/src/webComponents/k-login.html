@@ -13,7 +13,7 @@
                 </p>
                 <p>
                     <label for="password">Senha:&nbsp;</label>
-                    <input type="password" id="password" placeholder="Senha" maxlength="20">
+                    <input type="password" id="password" placeholder="Senha" maxlength="20" on-change="enterPressed">
                 </p>
                 <a href="#" on-click="rememberPassword">Esqueci minha senha...</a>
                 <p>
@@ -26,24 +26,41 @@
 
     <script>
         Polymer('k-login', {
+            ready: function() {
+                this.$.email.focus();
+            },
             rememberPassword: function(e) {
                 e.preventDefault();
                 K.goTo("k-remember-password");
             },
+            enterPressed: function(e) {
+                if (event.which == 13 || event.keyCode == 13) {
+                    this.login();
+                }
+            },
             login: function() {
-                amplify.request("auth:login", {
-                    email: this.$.email.value,
-                    password: this.$.password.value
-                }, jQuery.proxy(function(msg, obj, isOk) {
-                    if (isOk) {
-                        K.message.showSuccess(msg);
-                        K.setToken(obj);
-                        K.goTo('k-welcome');
+                jQuery.ajax({
+                    url: "/Kemecom-web/ws/auth",
+                    dataType: "json",
+                    type: "POST",
+                    context: this,
+                    data: {
+                        email: this.$.email.value,
+                        password: this.$.password.value
+                    }
+                }).done(function(data, status, xhr) {
+                    if (data.successful) {
+                        K.message.showSuccess(data.message);
+                        K.setToken(data.object);
+                        K.goTo('k-profile');
                     } else {
-                        K.message.showError(msg);
+                        K.message.showError(data.message);
                         K.goTo('k-login');
                     }
-                }), this);
+                }).fail(function(xhr, error, errorMsg) {
+                    K.message.showError('Erro [' + error + "]:" + errorMsg);
+                    K.goTo('k-login');
+                });
             },
             register: function() {
                 K.goTo("k-sign-in");

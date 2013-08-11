@@ -5,19 +5,25 @@
 package br.rcp.kemecom.model.db;
 
 import com.google.code.morphia.annotations.Embedded;
+import com.mongodb.util.JSON;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 @Embedded
 public class Address {
 
     private String zipCode;
+
     private String street;
+
     private String number;
+
     private String city;
+
     private String state;
+
     private String neighborn;
 
     public Address() {
@@ -73,5 +79,10 @@ public class Address {
 
     public void setNeighborn(String neighborn) {
         this.neighborn = neighborn;
+    }
+
+    @Override
+    public String toString() {
+        return JSON.serialize(this);
     }
 }

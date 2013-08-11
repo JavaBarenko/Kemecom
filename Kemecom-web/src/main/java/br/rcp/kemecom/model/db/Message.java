@@ -12,9 +12,36 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class Message {
 
-    public static final boolean SUCCESS = true;
+    public static enum Type {
 
-    public static final boolean ERROR = false;
+        SUCCESS(true), ERROR(false);
+
+        Type(boolean b) {
+            this.value = b;
+        }
+
+        private boolean value;
+
+        public boolean getValue() {
+            return value;
+        }
+    }
+
+    public static Message ok(String message) {
+        return new Message(Type.SUCCESS, message);
+    }
+
+    public static Message ok(String message, Object obj) {
+        return new Message(Type.SUCCESS, message, obj);
+    }
+
+    public static Message error(String message) {
+        return new Message(Type.ERROR, message);
+    }
+
+    public static Message error(String message, Object obj) {
+        return new Message(Type.ERROR, message, obj);
+    }
 
     private Boolean success;
 
@@ -22,13 +49,12 @@ public class Message {
 
     private Object object;
 
-    public Message(Boolean success, String message) {
-        this.success = success;
-        this.message = message;
+    public Message(Type type, String message) {
+        this(type, message, null);
     }
 
-    public Message(Boolean success, String message, Object object) {
-        this.success = success;
+    public Message(Type type, String message, Object object) {
+        this.success = type.getValue();
         this.message = message;
         this.object = object;
     }
