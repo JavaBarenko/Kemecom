@@ -26,7 +26,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
             log.error("Erro interceptado pelo " + getClass().getSimpleName(), exception);
         }
 
-        Message msg = new Message(Message.ERROR, exception.getMessage().replaceFirst(" \\('[^']+'\\)$", ""));
+        Message msg = Message.error(exception.getMessage().replaceFirst(" \\('[^']+'\\)$", ""));
 
         Integer httpCode = getHttpCode(exception, log);
 

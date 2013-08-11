@@ -66,7 +66,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
         ds.save(tk);
 
-        return new Message(Message.SUCCESS, "Autenticado com sucesso!", tk.getId().toString());
+        return Message.ok("Autenticado com sucesso!", tk.getId().toString());
     }
 
     private void invalidateCurrentTokens(Email email) {
@@ -74,7 +74,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
     }
 
     @Override
-    public boolean isAuth(SecurityToken token) {
+    public User validateAuth(SecurityToken token) {
         if(token == null || !token.isValid()){
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
@@ -87,7 +87,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
         if(isExpired(tk)){
             ds.delete(tk);
-            throw new AuthException("Token expirado, efetue o login novamente!").withHttpCode(419);
+            throw new AuthException("Token expirado, efetue o login novamente!");
         }
 
         if(isADiferentIPAddress(tk)){
@@ -97,17 +97,19 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
         tk.setLastAccessedAt(new Date());
         ds.save(tk);
 
-        return true;
+        User currentUser = ds.find(User.class, "email", tk.getEmail()).get();
+
+        return currentUser;
     }
 
     @Override
     public Message logout(@FormParam("token") SecurityToken token) {
         ds.delete(Token.class, token.getTokenId());
-        return new Message(Message.SUCCESS, "Usuário deslogado com sucesso");
+        return Message.ok("Usuário deslogado com sucesso");
     }
 
     private boolean isExpired(Token tk) {
-        return sessionDurationInMinutes >= Minutes.minutesBetween(Instant.now(), new Instant(tk.getLastAccessedAt())).getMinutes();
+        return sessionDurationInMinutes < Minutes.minutesBetween(new Instant(tk.getLastAccessedAt()), Instant.now()).getMinutes();
     }
 
     private boolean isADiferentIPAddress(Token tk) {

@@ -170,8 +170,8 @@ module.exports = function(grunt) {
                     src: ['src/js/lib/polymer.min.js'],
                     dest: '<%= buildDir %>/assets/polymer.js'
                 }, {
-                    src: ['src/js/lib/amplify.min.js'],
-                    dest: '<%= buildDir %>/assets/amplify.js'
+                    src: ['src/js/lib/parsley.js'],
+                    dest: '<%= buildDir %>/assets/parsley.min.js'
                 }, {
                     src: ['src/js/lib/jquery-1.10.2.min.js'],
                     dest: '<%= buildDir %>/assets/jquery.js'

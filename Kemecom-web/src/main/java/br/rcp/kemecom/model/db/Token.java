@@ -12,6 +12,7 @@ import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Version;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bson.types.ObjectId;
 
 /**
@@ -20,6 +21,8 @@ import org.bson.types.ObjectId;
  */
 @Entity("auth")
 public class Token {
+
+    public static final String SECURITY_TOKEN = "KemecomToken";
 
     @Id
     private ObjectId id;
@@ -83,5 +86,10 @@ public class Token {
 
     public void setLastAccessedAt(Date lastAccessedAt) {
         this.lastAccessedAt = lastAccessedAt;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -1,10 +1,10 @@
 (function($env, $, amplify) {
-    amplify.request.define("getZipCode", "ajax", {
-        url: 'http://www.buscacep.correios.com.br/servicos/dnec/consultaLogradouroAction.do',
-        type: 'post',
-        cache: "persist"
-    });
-
+//    amplify.request.define("getZipCode", "ajax", {
+//        url: 'http://www.buscacep.correios.com.br/servicos/dnec/consultaLogradouroAction.do',
+//        type: 'post',
+//        cache: "persist"
+//    });
+//
     $env.getZipCode = function(zipCode, callback, context) {
         amplify.request("getZipCode", {
             CEP: zipCode,
@@ -20,4 +20,4 @@
             callback.call(context, address, data);
         });
     };
-})(K, jQuery, amplify);
+})(K, jQuery);
