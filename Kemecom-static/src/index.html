@@ -37,6 +37,56 @@
         <section class="page">
             <article id="content" class="content">
             </article>
+            <article id="contentsss" class="content">
+
+
+                <div class="component">
+                    <header>
+                        <h3>Bem vindo!</h3>
+                    </header>
+                    <article>
+                        <header>E-Mail</header>
+                        <label id="email"></label>
+                        <p>
+                            <label for="name">Nome:&nbsp;</label>
+                            <input id="name" type="text" maxlength="50" placeholder="Nome" readonly="">
+                        </p>
+                        <article class="address">
+                            <header>Endereço</header>
+                            <p>
+                                <label for="zipCode">CEP:&nbsp;</label>
+                                <input id="zipCode" type="text" maxlength="9" placeholder="CEP" readonly="">
+                                <button id="searchZipcode" on-click="searchZipCode" disabled="">Buscar CEP</button>
+                            </p>
+                            <p>
+                                <label for="address">Logradouro:&nbsp;</label>
+                                <input id="address" maxlength="120" placeholder="Logradouro" readonly="">
+                                <input id="number" class="minimum" maxlength="6" placeholder="Número" readonly="">
+                            </p>
+                            <p>
+                                <label for="neighbor">Bairro:&nbsp;</label>
+                                <input id="neighbor" maxlength="32" placeholder="Bairro" readonly="">
+                            </p>
+                            <p>
+                                <label for="city">Cidade:&nbsp;</label>
+                                <input id="city" maxlength="32" placeholder="Cidade" readonly="">
+                            </p>
+                            <p>
+                                <label for="state">Estado:&nbsp;</label>
+                                <input id="state" maxlength="2" placeholder="Estado" readonly="">
+                            </p>
+                        </article>
+                        <p class="buttonPanel">
+                            <button id="update" on-click="update">Alterar</button>
+                            <button id="save" on-click="save" style="display: none">Salvar</button>
+                            <button id="changePassword" on-click="updatePassword">Alterar Senha</button>
+                            <button id="removeAccount" on-click="removeAccount">Excluir conta</button>
+                        </p>
+                    </article>
+                </div>
+
+
+            </article>
         </section>
         <footer></footer>
         <script>
