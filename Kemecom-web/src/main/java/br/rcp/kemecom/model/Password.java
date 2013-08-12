@@ -31,9 +31,6 @@ public class Password {
     @Transient
     private String password;
 
-    @Transient
-    private boolean valid;
-
     public Password() {
     }
 
@@ -42,9 +39,8 @@ public class Password {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-        this.valid = isValid(password);
-        this.sha512Hex = DigestUtils.sha512Hex(password);
+        if(isValid(password))
+            this.sha512Hex = DigestUtils.sha512Hex(password);
     }
 
     @Override
@@ -64,7 +60,7 @@ public class Password {
 
     @JsonIgnore
     public boolean isValid() {
-        return valid;
+        return sha512Hex != null;
     }
 
     private boolean isValid(String pwd) {

@@ -11,9 +11,14 @@ import br.rcp.kemecom.helper.MongoDatastore;
 import br.rcp.kemecom.model.db.Token;
 import br.rcp.kemecom.model.db.User;
 import com.google.code.morphia.Datastore;
+import facebook4j.Facebook;
+import facebook4j.FacebookFactory;
+import facebook4j.conf.Configuration;
+import facebook4j.conf.ConfigurationBuilder;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +43,10 @@ public class Resources {
     @ApplicationScoped
     private EmailSender emailSender;
 
+    @Produces
+    @SessionScoped
+    private Facebook facebook;
+
     public Resources() throws Exception {
         if(log.isInfoEnabled()){
             log.info("Carregando recursos ...");
@@ -46,6 +55,7 @@ public class Resources {
         loadMemcached();
         loadDatastore();
         loadEmailSender();
+        loadFacebookClient();
 
         if(log.isInfoEnabled()){
             log.info("Recursos carregados com sucesso!");
@@ -54,6 +64,13 @@ public class Resources {
 
     private void loadMemcached() throws IOException {
         memcached = new Memcached("127.0.0.1:11211");
+    }
+
+    private void loadFacebookClient() throws IOException {
+        ConfigurationBuilder confBuilder = new ConfigurationBuilder();
+        confBuilder.setOAuthAppId("190919694416709").setOAuthAppSecret("86f957e1cd24f5356ea9d6fefd700098").setOAuthPermissions("email").setJSONStoreEnabled(true);
+        Configuration conf = confBuilder.build();
+        facebook = new FacebookFactory(conf).getInstance();
     }
 
     private void loadDatastore() throws UnknownHostException {

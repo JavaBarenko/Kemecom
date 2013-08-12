@@ -1,10 +1,11 @@
 <polymer-element name="k-login">
     <template>
-        <link rel="stylesheet" href="../assets/k-login.css" />
-        <section class="login">
+        <link rel="stylesheet" href="../assets/style.css" />
+        <div class="component">
             <header>
                 <h3>Login</h3>
-                <h4>Insira seu E-Mail e senha para acessar o sistema</h4>
+                <p><strong>Insira seu E-Mail e senha para acessar o sistema</strong>
+                </p>
             </header>
             <article>
                 <p>
@@ -16,12 +17,12 @@
                     <input type="password" id="password" placeholder="Senha" maxlength="20" on-change="enterPressed">
                 </p>
                 <a href="#" on-click="rememberPassword">Esqueci minha senha...</a>
-                <p>
+                <p class="buttonPanel">
                     <button on-click="login">Entrar</button>
                     <button on-click="register">Criar conta</button>
                 </p>
             </article>
-        </section>
+        </div>
     </template>
 
     <script>
@@ -52,6 +53,7 @@
                     if (data.successful) {
                         K.message.showSuccess(data.message);
                         K.setToken(data.object);
+                        amplify.publish("auth/loggined");
                         K.goTo('k-profile');
                     } else {
                         K.message.showError(data.message);

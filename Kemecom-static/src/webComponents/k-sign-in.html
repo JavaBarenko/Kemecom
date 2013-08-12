@@ -1,7 +1,10 @@
 <polymer-element name="k-sign-in">
     <template>
-        <h3>Novo Cadastro</h3>
-        <session>
+        <link rel="stylesheet" href="../assets/style.css" />
+        <div class="component">
+            <header class="k-sign-in">
+                <h3>Novo Cadastro</h3>
+            </header>
             <article>
                 <header>Cadastre-se via Facebook</header>
                 <k-facebook></k-facebook>
@@ -20,12 +23,12 @@
                     <label for="password2">Senha:&nbsp;</label>
                     <input type="password" id="password2" placeholder="Confirmação de Senha" maxlength="20">
                 </p>
-                <p>
+                <p class="buttonPanel">
                     <button on-click="signin">Criar conta!</button>
                     <button on-click="cancel">Cancelar</button>
                 </p>
             </article>
-        </session>
+        </div>
     </template>
 
     <script>

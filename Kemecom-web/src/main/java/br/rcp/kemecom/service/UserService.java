@@ -6,13 +6,13 @@ package br.rcp.kemecom.service;
 
 import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.Password;
-import br.rcp.kemecom.model.db.Address;
 import br.rcp.kemecom.model.db.Message;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MultivaluedMap;
 
 /**
  <p/>
@@ -45,6 +45,6 @@ public interface UserService {
     Message updatePassword(@FormParam("currPassword") Password currentPassword, @FormParam("password") Password newPassword);
 
     @POST
-    @Path("/address")
-    Message updateAddress(@FormParam("address") Address address);
+    @Path("/me")
+    Message updateUser(MultivaluedMap<String, String> formParams);
 }

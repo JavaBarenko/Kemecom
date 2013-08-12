@@ -1,5 +1,5 @@
 
-(function($env, $) {
+(function($env, $, amplify) {
     var K = {};
     var homeTagName = null;
 
@@ -58,33 +58,47 @@
             return currMessage;
         }
     };
-    /*
-     var fbButton;
-     K.facebook = {
-     showIn: function(element) {
-     fbButton = $("#fb");
-     K.facebook.showIn = function(element) {
-     fbButton.appendTo($(element));
-     };
-     K.facebook.showIn(element);
-     },
-     hide: function() {
-     if (fbButton)
-     fbButton.appendTo("#tartaro");
-     }
-     };
-     */
 
     K.isLoggedIn = function() {
-        return !!$.ajax({
+        return JSON.parse($.ajax({
             url: "/Kemecom-web/ws/auth",
             dataType: "json",
+            async: false,
             type: "GET",
             beforeSend: function(xhr, settings) {
                 xhr.setRequestHeader('KemecomToken', K.getToken());
             }
-        }).responseText;
+        }).responseText).successful;
+    };
+
+
+    //Precisa ser na window, pois findZipCode chama globalmente
+    window.correiocontrolcep = function(valor) {
+        if (valor.erro) {
+            alert("CEP não encontrado!");
+            return;
+        }
+
+        amplify.publish("findZipCode/" + valor.cep, valor);
+    };
+
+    K.findZipCode = function(zipCode, callback, context) {
+        var url = "http://cep.correiocontrol.com.br/" + zipCode + ".js";
+        var scr = $('<script>');
+        scr.attr('id', 'cep' + zipCode);
+        scr.attr('src', url);
+        scr.attr('charset', 'utf-8');
+        $('#tartaro').append(scr);
+
+        amplify.subscribe("findZipCode/" + zipCode, function(data) {
+            try {
+                callback.call(context, data);
+            } finally {
+                amplify.unsubscribe("findZipCode/" + zipCode, arguments.callee);
+                $('#cep' + zipCode).remove();
+            }
+        });
     };
 
     $env.K = K;
-}(window, jQuery));
+}(window, jQuery, amplify));

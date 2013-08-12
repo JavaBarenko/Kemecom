@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         buildDir: '../Kemecom-web/src/main/webapp/pages', //'/usr/local/Cellar/jetty/9.0.3/libexec/webapps.demo/ROOT'
+//        buildDir: '/Volumes/Data/frameworks/jboss-eap-6.1/standalone/tmp/vfs/temp30d37412ae40b444/Kemecom-web-1.0-SNAPSHOT.war-6515a78fe58da2f/pages',
         distDir: '../Kemecom-web/src/main/webapp/pages',
         clean: {
             build: ['<%= buildDir %>', 'report'],
@@ -81,7 +82,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= buildDir %>/assets/script.js': [
-                        'src/js/k.js', 'src/js/k-zipCode.js', 'src/js/amplify-definitions-userservice.js'
+                        'src/js/k.js'
                     ]
                 }
             },

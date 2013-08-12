@@ -11,6 +11,9 @@
 
 java facebook connector
 oauth facebook
+apiKey 190919694416709
+secretKey 86f957e1cd24f5356ea9d6fefd700098
+
 Usar MDC no log: http://www.javacodegeeks.com/2013/01/effective-logging-in-javajee-mapped-diagnostic-context.html
 
 AOP: http://java.dzone.com/articles/cdi-aop

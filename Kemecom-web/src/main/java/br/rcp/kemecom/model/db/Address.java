@@ -24,7 +24,7 @@ public class Address {
 
     private String state;
 
-    private String neighborn;
+    private String neighborhood;
 
     public Address() {
     }
@@ -73,12 +73,12 @@ public class Address {
         this.state = state;
     }
 
-    public String getNeighborn() {
-        return neighborn;
+    public String getNeighborhood() {
+        return neighborhood;
     }
 
-    public void setNeighborn(String neighborn) {
-        this.neighborn = neighborn;
+    public void setNeighborhood(String neighborn) {
+        this.neighborhood = neighborn;
     }
 
     @Override
