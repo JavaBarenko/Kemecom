@@ -9,40 +9,33 @@
                 <header>E-Mail</header>
                 <label id="email"></label>
                 <p>
-                    <span class="label"><label for="name">Nome:&nbsp;</label>
-                    </span>
-                    <span class="field"><input id="name" type="text" maxlength="50" placeholder="Nome" readonly="">
-                    </span></p>
+                    <label for="name">Nome:&nbsp;</label>
+                    <input id="name" type="text" maxlength="50" placeholder="Nome" readonly="">
+                </p>
                 <article class="address">
                     <header>Endereço</header>
                     <p>
-                        <span class="label"><label for="zipCode">CEP:&nbsp;</label>
-                        </span>
-                        <span class="field"><input id="zipCode" type="text" maxlength="9" placeholder="CEP" readonly="">
-                            <button id="searchZipcode" on-click="searchZipCode" disabled="">Buscar CEP</button></span>
+                        <label for="zipCode">CEP:&nbsp;</label>
+                        <input id="zipCode" type="text" maxlength="9" placeholder="CEP" readonly="">
+                        <button id="searchZipcode" on-click="searchZipCode" disabled="">Buscar CEP</button>
                     </p>
                     <p>
-                        <span class="label"><label for="address">Logradouro:&nbsp;</label>
-                        </span>
-                        <span class="field"><input id="address" maxlength="120" placeholder="Logradouro" readonly="">
-                            <input id="number" class="minimum" maxlength="6" placeholder="Número" readonly=""></span>
+                        <label for="address">Logradouro:&nbsp;</label>
+                        <input id="address" maxlength="120" placeholder="Logradouro" readonly="">
+                        <input id="number" class="minimum" maxlength="6" placeholder="Número" readonly="">
                     </p>
                     <p>
-                        <span class="label"><label for="neighbor">Bairro:&nbsp;</label>
-                        </span>
-                        <span class="field"><input id="neighbor" maxlength="32" placeholder="Bairro" readonly=""></span>
+                        <label for="neighbor">Bairro:&nbsp;</label>
+                        <input id="neighbor" maxlength="32" placeholder="Bairro" readonly="">
                     </p>
                     <p>
-                        <span class="label"><label for="city">Cidade:&nbsp;</label>
-                        </span>
-                        <span class="field"><input id="city" maxlength="32" placeholder="Cidade" readonly="">
-                            </p>
-                            <p>
-                                <span class="label"><label for="state">Estado:&nbsp;</label>
-                                </span>
-                                <span class="field"><input id="state" maxlength="2" placeholder="Estado" readonly="">
-                                </span>
-                            </p>
+                        <label for="city">Cidade:&nbsp;</label>
+                        <input id="city" maxlength="32" placeholder="Cidade" readonly="">
+                    </p>
+                    <p>
+                        <label for="state">Estado:&nbsp;</label>
+                        <input id="state" maxlength="2" placeholder="Estado" readonly="">
+                    </p>
                 </article>
                 <p class="buttonPanel">
                     <button id="update" on-click="update">Alterar</button>

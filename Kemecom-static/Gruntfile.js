@@ -82,7 +82,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= buildDir %>/assets/script.js': [
-                        'src/js/k.js'
+                        'src/js/k.js', 'src/js/k-message.js', 'src/js/k-zipcode.js',
                     ]
                 }
             },

@@ -2,7 +2,7 @@
     <template>
         <link rel="stylesheet" href="../assets/style.css" />
         <div class="logout">
-            <a href="#">Logout</a>
+            <a href="#" on-click="logout">Logout</a>
         </div>
     </template>
 
@@ -19,7 +19,7 @@
                     this.style.display = "none";
                 }, this));
             },
-            click: function() {
+            logout: function(e) {
                 if (K.isLoggedIn() && confirm("Deseja realmente sair?")) {
                     jQuery.ajax({
                         url: "/Kemecom-web/ws/auth",
@@ -33,7 +33,7 @@
                         if (data.successful) {
                             K.message.showSuccess(data.message);
                             K.setToken("");
-                            amplify.subscribe("auth/loggouted");
+                            amplify.publish("auth/loggouted");
                         } else {
                             K.message.showError(data.message);
                         }

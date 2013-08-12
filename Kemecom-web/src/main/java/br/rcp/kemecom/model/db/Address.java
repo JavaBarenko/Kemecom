@@ -5,25 +5,22 @@
 package br.rcp.kemecom.model.db;
 
 import com.google.code.morphia.annotations.Embedded;
+import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- <p/>
- @author barenko
+ * <p/>
+ * @author barenko
  */
 @Embedded
-public class Address {
+public class Address extends BasicDBObject {
 
     private String zipCode;
-
     private String street;
-
     private String number;
-
     private String city;
-
     private String state;
-
     private String neighborhood;
 
     public Address() {
@@ -33,6 +30,7 @@ public class Address {
         this.zipCode = zipCode;
     }
 
+    @JsonProperty("zipcode")
     public String getZipCode() {
         return zipCode;
     }
@@ -41,6 +39,7 @@ public class Address {
         this.zipCode = zipCode;
     }
 
+    @JsonProperty("street")
     public String getStreet() {
         return street;
     }
@@ -49,6 +48,7 @@ public class Address {
         this.street = street;
     }
 
+    @JsonProperty("number")
     public String getNumber() {
         return number;
     }
@@ -57,6 +57,7 @@ public class Address {
         this.number = number;
     }
 
+    @JsonProperty("city")
     public String getCity() {
         return city;
     }
@@ -65,6 +66,7 @@ public class Address {
         this.city = city;
     }
 
+    @JsonProperty("state")
     public String getState() {
         return state;
     }
@@ -73,6 +75,7 @@ public class Address {
         this.state = state;
     }
 
+    @JsonProperty("neighborhood")
     public String getNeighborhood() {
         return neighborhood;
     }

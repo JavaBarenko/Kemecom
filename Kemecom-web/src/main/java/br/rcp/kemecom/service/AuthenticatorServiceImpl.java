@@ -23,13 +23,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Instant;
 import org.joda.time.Minutes;
 
 /**
- <p/>
- @author barenko
+ * <p/>
+ * @author barenko
  */
 @ApplicationScoped
 @Produces({MediaType.APPLICATION_JSON})
@@ -39,10 +38,9 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
     @Inject
     private Datastore ds;
-
     @Context
     private HttpServletRequest request;
-
+//TODO colocar para configuracao
     private Integer sessionDurationInMinutes = 30;
 
     public AuthenticatorServiceImpl() {
@@ -57,7 +55,7 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
     public Message authenticate(@FormParam("email") Email email, @FormParam("password") Password password) {
         User u = ds.find(User.class, "email", email).get();
 
-        if(u == null || !Password.equals(u.getPassword(), password)){
+        if (u == null || !Password.equals(u.getPassword(), password)) {
             throw new AuthException("E-Mail ou senha inválido(s)!");
         }
 
@@ -83,22 +81,22 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
     @Override
     public User validateAuth(SecurityToken token) {
-        if(token == null || !token.isValid()){
+        if (token == null || !token.isValid()) {
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
 
         Token tk = ds.get(Token.class, token.getTokenId());
 
-        if(tk == null){
+        if (tk == null) {
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
 
-        if(isExpired(tk)){
+        if (isExpired(tk)) {
             ds.delete(tk);
             throw new AuthException("Token expirado, efetue o login novamente!");
         }
 
-        if(isADiferentIPAddress(tk)){
+        if (isADiferentIPAddress(tk)) {
             throw new AuthException("Token inválido, efetue o login novamente!");
         }
 
