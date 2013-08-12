@@ -1,5 +1,6 @@
 <polymer-element name="k-logout">
     <template>
+        <link rel="stylesheet" href="../assets/style.css" />
         <div class="logout">
             <a href="#">Logout</a>
         </div>
@@ -7,8 +8,19 @@
 
     <script>
         Polymer('k-logout', {
+            ready: function() {
+                this.style.display = "none";
+
+                amplify.subscribe("auth/loggined", jQuery.proxy(function() {
+                    this.style.display = "block";
+                    K.goTo("k-profile");
+                }, this));
+                amplify.subscribe("auth/loggouted", jQuery.proxy(function() {
+                    this.style.display = "none";
+                }, this));
+            },
             click: function() {
-                if (confirm("Deseja realmente sair?")) {
+                if (K.isLoggedIn() && confirm("Deseja realmente sair?")) {
                     jQuery.ajax({
                         url: "/Kemecom-web/ws/auth",
                         dataType: "json",
@@ -21,6 +33,7 @@
                         if (data.successful) {
                             K.message.showSuccess(data.message);
                             K.setToken("");
+                            amplify.subscribe("auth/loggouted");
                         } else {
                             K.message.showError(data.message);
                         }

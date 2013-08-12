@@ -1,6 +1,6 @@
 <polymer-element name="k-welcome">
     <template>
-        <link rel="stylesheet" href="../assets/k-welcome.css" />
+        <link rel="stylesheet" href="../assets/style.css" />
         <section class="k-welcome">
             <header>
                 <div class="center">
@@ -18,13 +18,13 @@
     </template>
 
     <script>
-        Polymer('k-welcome',{
-            ready: function(){
+        Polymer('k-welcome', {
+            ready: function() {
             },
-            login: function(ev){
+            login: function(ev) {
                 K.goTo("k-login");
             },
-            signin: function(ev){
+            signin: function(ev) {
                 K.goTo("k-sign-in");
             }
         });

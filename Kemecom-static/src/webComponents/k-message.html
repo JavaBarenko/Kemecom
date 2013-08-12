@@ -1,40 +1,19 @@
 <polymer-element name="k-message">
     <template>
-        <style>
-            .message {
-                width: 100%;
-                height: 30px;
-                margin: 0 0 5px 5px;
-                position: absolute;
-                border-bottom-right-radius: 15px;
-                border-bottom-left-radius: 15px;
-                display: block;
-                padding: 15px 0 0 30px;
-                font-weight: bold;
-                font-size: medium;
-                text-align: center;
-            }
-            .success {
-                background-color: yellowgreen;
-            }
-            .error {
-                background-color: tomato;
-            }
-        </style>
-        <div id="messageContainer" class="message">
-            <p id="messageBox"></p>
+        <link rel="stylesheet" href="../assets/style.css" />
+        <div id="messageContainer">
+            <span id="messageBox"></span>
         </div>
     </template>
 
     <script>
         Polymer('k-message', {
             ready: function() {
-                window.inside = this;
                 var message = K.message.getCurrentMessage();
-                $(inside.$.messageContainer).addClass(message.type);
+                $(this.$.messageContainer).addClass(message.type);
                 this.$.messageBox.textContent = message.message;
 
-                jQuery(this).slideDown('slow').delay(4000).slideUp('slow', function() {
+                jQuery(this).slideDown(400).delay(4000).slideUp(400, function() {
                     this.parentElement.removeChild(this);
                 });
             }

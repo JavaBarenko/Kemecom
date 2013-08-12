@@ -30,6 +30,8 @@ public class User {
     @Version
     Long version;
 
+    String name;
+
     @Indexed(name = "unique_email", dropDups = true, unique = true)
     @br.rcp.kemecom.model.validator.Email
     private Email email;
@@ -79,6 +81,15 @@ public class User {
         this.email = email;
     }
 
+    @JsonProperty("name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @JsonProperty("password")
     public Password getPassword() {
         return password;
@@ -99,6 +110,7 @@ public class User {
         User u = new User();
         u.setAddress(address);
         u.setEmail(email);
+        u.setName(name);
         u.setId(id);
         u.setPassword(password);
         return u;

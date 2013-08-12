@@ -1,76 +1,98 @@
 <polymer-element name="k-profile">
     <template>
-        <link rel="stylesheet" href="../assets/k-profile.css" />
-        <section class="profile">
-            <h3>Bem vindo!</h3>
+        <link rel="stylesheet" href="../assets/style.css" />
+        <div class="component">
+            <header>
+                <h3>Bem vindo!</h3>
+            </header>
             <article>
-                <p>
-                <h4>E-Mail</h4>
+                <header>E-Mail</header>
                 <label id="email"></label>
-                </p>
-                <h4>Endereço</h4>
-                <article class="address">
-                    <p>
-                        <label for="zipCode">CEP:&nbsp;</label>
-                        <input id="zipCode" type="text" maxlength="9" placeholder="CEP" on-input="validateZipCode" readonly="">
-                    </p>
-                    <p>
-                        <label for="address">Logradouro:&nbsp;</label>
-                        <input id="address" maxlength="120" placeholder="Logradouro" readonly="">
-                        <input id="number" maxlength="6" placeholder="Número" readonly="">
-                    </p>
-                    <p>
-                        <label for="neighbor">Bairro:&nbsp;</label>
-                        <input id="neighbor" maxlength="32" placeholder="Bairro" readonly="">
-                    </p>
-                    <p>
-                        <label for="city">Cidade:&nbsp;</label>
-                        <input id="city" maxlength="32" placeholder="Cidade" readonly="">
-                    </p>
-                    <p>
-                        <label for="state">Estado:&nbsp;</label>
-                        <input id="state" maxlength="2" placeholder="Estado" readonly="">
-                    </p>
-                </article>
                 <p>
+                    <span class="label"><label for="name">Nome:&nbsp;</label>
+                    </span>
+                    <span class="field"><input id="name" type="text" maxlength="50" placeholder="Nome" readonly="">
+                    </span></p>
+                <article class="address">
+                    <header>Endereço</header>
+                    <p>
+                        <span class="label"><label for="zipCode">CEP:&nbsp;</label>
+                        </span>
+                        <span class="field"><input id="zipCode" type="text" maxlength="9" placeholder="CEP" readonly="">
+                            <button id="searchZipcode" on-click="searchZipCode" disabled="">Buscar CEP</button></span>
+                    </p>
+                    <p>
+                        <span class="label"><label for="address">Logradouro:&nbsp;</label>
+                        </span>
+                        <span class="field"><input id="address" maxlength="120" placeholder="Logradouro" readonly="">
+                            <input id="number" class="minimum" maxlength="6" placeholder="Número" readonly=""></span>
+                    </p>
+                    <p>
+                        <span class="label"><label for="neighbor">Bairro:&nbsp;</label>
+                        </span>
+                        <span class="field"><input id="neighbor" maxlength="32" placeholder="Bairro" readonly=""></span>
+                    </p>
+                    <p>
+                        <span class="label"><label for="city">Cidade:&nbsp;</label>
+                        </span>
+                        <span class="field"><input id="city" maxlength="32" placeholder="Cidade" readonly="">
+                            </p>
+                            <p>
+                                <span class="label"><label for="state">Estado:&nbsp;</label>
+                                </span>
+                                <span class="field"><input id="state" maxlength="2" placeholder="Estado" readonly="">
+                                </span>
+                            </p>
+                </article>
+                <p class="buttonPanel">
                     <button id="update" on-click="update">Alterar</button>
                     <button id="save" on-click="save" style="display: none">Salvar</button>
                     <button id="changePassword" on-click="updatePassword">Alterar Senha</button>
                     <button id="removeAccount" on-click="removeAccount">Excluir conta</button>
                 </p>
             </article>
-        </section>
+        </div>
     </template>
 
     <script>
         Polymer('k-profile', {
-            validateZipCode: function() {
-                alert(1);
+            searchZipCode: function() {
+                K.findZipCode(this.$.zipCode.value.replace(/\D/g, ""), function(data) {
+                    this.$.zipCode.value = data.cep;
+                    this.$.address.value = data.logradouro;
+                    this.$.neighborhood.value = data.bairro;
+                    this.$.city.value = data.localidade;
+                    this.$.state.value = data.uf;
+                }, this);
             },
             update: function() {
+                this.$.name.readOnly = false;
                 this.$.zipCode.readOnly = false;
                 this.$.number.readOnly = false;
+                this.$.searchZipcode.disabled = false;
 
                 this.$.update.style.display = "none";
-                this.$.save.style.display = "block";
+                this.$.save.style.display = "inline";
             },
             save: function() {
+                this.$.name.readOnly = true;
                 this.$.zipCode.readOnly = true;
                 this.$.number.readOnly = true;
+                this.$.searchZipcode.disabled = true;
 
                 jQuery.ajax({
-                    url: "/Kemecom-web/ws/user/address",
+                    url: "/Kemecom-web/ws/user/me",
                     dataType: "json",
+                    context: this,
                     type: "POST",
                     data: {
-                        address: {
-                            zipCode: this.$.zipCode.value,
-                            number: this.$.number.value,
-                            address: this.$.address.value,
-                            city: this.$.city.value,
-                            neighbor: this.$.neighbor.value,
-                            state: this.$.state.value
-                        }
+                        name: this.$.name.value,
+                        zipCode: this.$.zipCode.value,
+                        number: this.$.number.value,
+                        street: this.$.address.value,
+                        city: this.$.city.value,
+                        neighborhood: this.$.neighbor.value,
+                        state: this.$.state.value
                     },
                     beforeSend: function(xhr, settings) {
                         xhr.setRequestHeader('KemecomToken', K.getToken());
@@ -79,17 +101,32 @@
                     if (data.successful) {
                         K.message.showSuccess(data.message);
 
-                        this.$.update.style.display = "block";
+                        this.$.email.value = data.object.email.email;
+                        this.$.name.value = data.object.name;
+                        if (data.object.address) {
+                            this.$.zipCode.value = data.object.address.zipcode;
+                            this.$.address.value = data.object.address.street;
+                            this.$.number.value = data.object.address.number;
+                            this.$.neighbor.value = data.object.address.neighborhood;
+                            this.$.city.value = data.object.address.city;
+                            this.$.state.value = data.object.address.state;
+                        }
+
+                        this.$.update.style.display = "inline";
                         this.$.save.style.display = "none";
                     } else {
                         K.message.showError(data.message);
+                        this.$.name.readOnly = false;
                         this.$.zipCode.readOnly = false;
                         this.$.number.readOnly = false;
+                        this.$.searchZipcode.disabled = false;
                     }
                 }).fail(function(xhr, error, errorMsg) {
                     K.message.showError('Erro [' + error + "]:" + errorMsg);
+                    this.$.name.readOnly = false;
                     this.$.zipCode.readOnly = false;
                     this.$.number.readOnly = false;
+                    this.$.searchZipcode.disabled = false;
                 });
             },
             changePassword: function() {
@@ -123,6 +160,9 @@
                 ;
             },
             ready: function() {
+
+                window.inside = this;
+
                 jQuery.ajax({
                     url: "/Kemecom-web/ws/user/me",
                     dataType: "json",
@@ -134,13 +174,14 @@
                 }).done(function(data, status, xhr) {
                     if (data.successful) {
                         this.$.email.textContent = data.object.email.email;
-                        if (data.address) {
-                            this.$.zipCode.value = data.address.zipcode;
-                            this.$.address.value = data.address.street;
-                            this.$.number.value = data.address.number;
-                            this.$.neighbor.value = data.address.neighbor;
-                            this.$.city.value = data.address.city;
-                            this.$.state.value = data.address.state;
+                        this.$.name.value = data.object.name;
+                        if (data.object.address) {
+                            this.$.zipCode.value = data.object.address.zipcode;
+                            this.$.address.value = data.object.address.street;
+                            this.$.number.value = data.object.address.number;
+                            this.$.neighbor.value = data.object.address.neighborhood;
+                            this.$.city.value = data.object.address.city;
+                            this.$.state.value = data.object.address.state;
                         }
                     } else {
                         K.message.showError(data.message);

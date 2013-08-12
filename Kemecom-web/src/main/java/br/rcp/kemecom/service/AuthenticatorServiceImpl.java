@@ -18,10 +18,12 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Instant;
 import org.joda.time.Minutes;
 
@@ -59,18 +61,24 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
             throw new AuthException("E-Mail ou senha inválido(s)!");
         }
 
-        invalidateCurrentTokens(email);
-
-        String ipAddress = request.getRemoteAddr();
-        Token tk = new Token(ipAddress, email);
-
-        ds.save(tk);
+        Token tk = validateToken(email);
 
         return Message.ok("Autenticado com sucesso!", tk.getId().toString());
     }
 
     private void invalidateCurrentTokens(Email email) {
         ds.findAndDelete(ds.createQuery(Token.class).field("email").equal(email));
+    }
+
+    @Override
+    public Token validateToken(Email email) {
+        invalidateCurrentTokens(email);
+
+        String ipAddress = request.getRemoteAddr();
+        Token tk = new Token(ipAddress, email);
+
+        ds.save(tk);
+        return tk;
     }
 
     @Override
@@ -103,8 +111,14 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
     }
 
     @Override
-    public Message logout(@FormParam("token") SecurityToken token) {
-        ds.delete(Token.class, token.getTokenId());
+    public Message isLogged(@HeaderParam(Token.SECURITY_TOKEN) SecurityToken token) {
+        return Message.ok("Usuário logado", validateAuth(getToken(token)).withoutPassword());
+    }
+
+    @Override
+    public Message logout(@HeaderParam(Token.SECURITY_TOKEN) SecurityToken token) {
+        ds.delete(Token.class, getToken(token).getTokenId());
+        request.getSession().invalidate();
         return Message.ok("Usuário deslogado com sucesso");
     }
 
@@ -114,5 +128,18 @@ public class AuthenticatorServiceImpl implements AuthenticatorService {
 
     private boolean isADiferentIPAddress(Token tk) {
         return !request.getRemoteAddr().equals(tk.getIpAddress());
+    }
+
+    /*
+     FIXME Nao sei porque, mas o @HeaderParam nao consegue recuperar o token..
+     entao, enquanto ele nao acha, obtenho da propria request.
+
+     Criei esse método para encapsular o workaround deste problema.
+     Assim que funcionar, este metodo pode ser excluido e utilizar a atribuicao direta.
+     */
+    @Deprecated
+    private SecurityToken getToken(SecurityToken token) {
+        return (token != null && token.isValid())
+                ? token : new SecurityToken(request.getHeader(Token.SECURITY_TOKEN));
     }
 }

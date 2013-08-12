@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
@@ -77,12 +78,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secure
-    public Message updateAddress(@FormParam("address") Address address) {
+//            public Message updateUser(@FormParam("name") String name, @FormParam("address") Address address) {request.getParameter("address")
+    public Message updateUser(MultivaluedMap<String, String> formParams) {
         User u = getCurrentUser();
-        u.setAddress(address);
+        u.setName(formParams.getFirst("name"));
+        Address address = u.getAddress();
+        if(address == null){
+            address = new Address();
+            u.setAddress(address);
+        }
+        address.setZipCode(formParams.getFirst("zipCode"));
+        address.setNumber(formParams.getFirst("number"));
+        address.setStreet(formParams.getFirst("street"));
+        address.setCity(formParams.getFirst("city"));
+        address.setNeighborhood(formParams.getFirst("neighborhood"));
+        address.setState(formParams.getFirst("state"));
         ds.save(u);
 
-        return Message.ok("Endereço atualizado com sucesso!", u.withoutPassword());
+        return Message.ok("Usuário atualizado com sucesso!", u.withoutPassword());
     }
 
     @Override

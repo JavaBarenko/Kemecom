@@ -5,12 +5,10 @@
 package br.rcp.kemecom.interceptor;
 
 import br.rcp.kemecom.exception.AuthException;
-import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.SecurityToken;
 import br.rcp.kemecom.model.db.Token;
 import br.rcp.kemecom.model.db.User;
 import br.rcp.kemecom.service.AuthenticatorService;
-import br.rcp.kemecom.service.UserService;
 import java.lang.reflect.Field;
 import java.util.List;
 import javax.inject.Inject;
