@@ -9,11 +9,13 @@
     <script>
         Polymer('k-logout', {
             ready: function() {
-                this.style.display = "none";
+                if (K.isLoggedIn())
+                    this.style.display = "block";
+                else
+                    this.style.display = "none";
 
                 amplify.subscribe("auth/loggined", jQuery.proxy(function() {
                     this.style.display = "block";
-                    K.goTo("k-profile");
                 }, this));
                 amplify.subscribe("auth/loggouted", jQuery.proxy(function() {
                     this.style.display = "none";
@@ -32,7 +34,6 @@
                     }).done(function(data, status, xhr) {
                         if (data.successful) {
                             K.message.showSuccess(data.message);
-                            K.setToken("");
                             amplify.publish("auth/loggouted");
                         } else {
                             K.message.showError(data.message);

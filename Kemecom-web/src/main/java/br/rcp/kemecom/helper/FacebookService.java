@@ -58,13 +58,15 @@ public class FacebookService {
 
     @GET
     @Path("/callback")
-    public Message callback() {
+    public Response callback() {
         Facebook facebook = (Facebook) request.getSession().getAttribute("facebook");
         String oauthCode = request.getParameter("code");
         try{
             facebook.getOAuthAccessToken(oauthCode);
             Token tk = loginByFace(facebook.getMe());
-            return Message.ok("Autenticado com sucesso!", tk.getId().toString());
+//            return Message.ok("Autenticado com sucesso!", tk.getId().toString());
+            URI uri = new URI(String.format("/pages/index.html#%s=%s", Token.SECURITY_TOKEN, tk.getId().toString()));
+            return Response.temporaryRedirect(uri).build();
         }catch(Exception ex){
             throw new AuthException(ex, "Falha ao tentar logar via facebook");
         }

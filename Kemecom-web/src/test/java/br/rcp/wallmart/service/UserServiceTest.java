@@ -6,9 +6,20 @@ package br.rcp.wallmart.service;
 
 import br.rcp.kemecom.service.UserServiceImpl;
 import br.rcp.kemecom.helper.MongoDatastore;
+import br.rcp.kemecom.model.Email;
+import br.rcp.kemecom.model.Password;
+import br.rcp.kemecom.model.db.Address;
+import br.rcp.kemecom.model.db.Message;
 import br.rcp.kemecom.model.db.User;
+import br.rcp.kemecom.service.UserService;
+import br.rcp.wallmart.TestUtils;
 import com.google.code.morphia.Datastore;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import javax.ws.rs.core.MultivaluedMap;
+import org.bson.types.ObjectId;
+import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +27,8 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public class UserServiceTest {
 
@@ -37,61 +48,110 @@ public class UserServiceTest {
     public static void afterClass() {
         ds.getMongo().close();
     }
-//    @Test
-//    public void listUsersMustBeEmpty() {
-//        UserService us = new UserService(ds);
-//        assertTrue(us.getUsers().isEmpty());
-//    }
-//
-//    @Test
-//    public void addUser() {
-//        UserService us = new UserService(ds);
-//
-//        User userAdded = us.addUser("un", "t@m.com", "pwd");
-//
-//        assertEquals("t@m.com", userAdded.getEmail());
-//        assertEquals("un", userAdded.getUsername());
-//        assertNotNull(userAdded.getId());
-//        assertNotNull(userAdded.getPassword());
-//
-//        assertEquals(userAdded, us.getUserByUsername("un"));
-//    }
-//
-//    @Test
-//    public void listUsers() {
-//        UserService us = new UserService(ds);
-//
-//        User user1 = us.addUser("un", "t@m.com", "pwd");
-//        User user2 = us.addUser("ou", "ou@m.com", "pwd");
-//
-//        List<User> users = us.getUsers();
-//
-//        assertEquals(2, users.size());
-//
-//        assertTrue(users.contains(user1));
-//        assertTrue(users.contains(user2));
-//    }
-//
-//    @Test
-//    public void getUserByUserName() {
-//        UserService us = new UserService(ds);
-//
-//        User addedUser = us.addUser("un", "t@m.com", "pwd");
-//        User findedUser = us.getUserByUsername("un");
-//
-//        assertEquals(addedUser, findedUser);
-//    }
-//
-//    @Test
-//    public void removeUser() {
-//        UserService us = new UserService(ds);
-//
-//        us.addUser("un", "t@m.com", "pwd");
-//        User removedUser = us.removeUser("un");
-//
-//        assertEquals("un", removedUser.getUsername());
-//        assertNotNull(removedUser.getId());
-//
-//        assertNull(us.getUserByUsername("un"));
-//    }
+
+    @Test
+    public void listUsersMustBeEmpty() {
+        UserService us = new UserServiceImpl(ds, null, null);
+        Message m = us.getUsers();
+        assertTrue(m.isSuccessful());
+        assert (((List) m.getObject()).isEmpty());
+    }
+
+    @Test
+    public void addUserMustBeReturnTheUserWithoutPassword() {
+        UserService us = new UserServiceImpl(ds, null, null);
+
+        Message m = us.addUser(new Email("t@m.com"), new Password("pwd11"));
+
+        assertTrue(m.isSuccessful());
+
+        User u = m.getObject();
+
+        assertNotNull(u.getEmail());
+        assertEquals("t@m.com", u.getEmail().toString());
+        assertNull(u.getAddress());
+        assertNotNull(u.getId());
+        assertNull(u.getPassword());
+    }
+
+    @Test
+    public void listUsers() {
+        UserService us = new UserServiceImpl(ds, null, null);
+
+        Message m1 = us.addUser(new Email("t@m.com"), new Password("pwd11"));
+        User u1 = m1.getObject();
+        Message m2 = us.addUser(new Email("ou@m.com"), new Password("pwd22"));
+        User u2 = m2.getObject();
+
+        Message ml = us.getUsers();
+        List<User> list = ml.getObject();
+
+        assertNotNull(list);
+        assertEquals(2, list.size());
+
+        List<String> emails = Arrays.asList(u1.getEmail().toString(), u2.getEmail().toString());
+        assertTrue(emails.contains(list.get(0).getEmail().toString()));
+        assertTrue(emails.contains(list.get(1).getEmail().toString()));
+    }
+
+    @Test
+    public void updateUser() {
+        User me = new User(new Email("t@m.com"));
+        me.setPassword(new Password("12345"));
+        ds.save(me);
+
+        UserService us = new UserServiceImpl(ds, null, TestUtils.fakeRequest(me));
+
+        MultivaluedMap<String, String> formParams = new MultivaluedMapImpl<String, String>();
+        formParams.add("name", "Test");
+        formParams.add("zipCode", "12345678");
+        formParams.add("number", "1");
+        formParams.add("street", "rua a");
+        formParams.add("city", "osasco");
+        formParams.add("neighborhood", "quitauna");
+        formParams.add("state", "SP");
+        Message m = us.updateUser(formParams);
+
+        assertTrue(m.isSuccessful());
+        User u = m.getObject();
+        assertNotNull(u);
+        assertEquals("Test", u.getName());
+        Address addr = u.getAddress();
+        assertNotNull(addr);
+        assertEquals("12345678", addr.getZipCode());
+        assertEquals("1", addr.getNumber());
+        assertEquals("rua a", addr.getStreet());
+        assertEquals("osasco", addr.getCity());
+        assertEquals("quitauna", addr.getNeighborhood());
+        assertEquals("SP", addr.getState());
+
+        User meUpdated = ds.get(User.class, me.getId());
+        assertNotNull(meUpdated);
+        assertEquals(me.getEmail(), meUpdated.getEmail());
+        assertEquals(me.getPassword().toString(), meUpdated.getPassword().toString());
+        assertEquals(me.getName(), meUpdated.getName());
+
+        Address addrUpdated = meUpdated.getAddress();
+        assertNotNull(addrUpdated);
+        assertEquals(addr.getCity(), addrUpdated.getCity());
+        assertEquals(addr.getNeighborhood(), addrUpdated.getNeighborhood());
+        assertEquals(addr.getNumber(), addrUpdated.getNumber());
+        assertEquals(addr.getState(), addrUpdated.getState());
+        assertEquals(addr.getStreet(), addrUpdated.getStreet());
+        assertEquals(addr.getZipCode(), addrUpdated.getZipCode());
+    }
+
+    @Test
+    public void removeUser() {
+        User me = new User(new Email("t@m.com"));
+        me.setPassword(new Password("12345"));
+        ds.save(me);
+
+        UserService us = new UserServiceImpl(ds, null, TestUtils.fakeRequest(me));
+
+        Message m = us.removeUser();
+
+        assertTrue(m.isSuccessful());
+        assertNull(m.getObject());
+    }
 }

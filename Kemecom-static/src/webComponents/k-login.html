@@ -4,10 +4,14 @@
         <div class="component">
             <header>
                 <h3>Login</h3>
-                <p><strong>Insira seu E-Mail e senha para acessar o sistema</strong>
-                </p>
             </header>
             <article>
+                <header>Via Facebook</header>
+                <k-facebook></k-facebook>
+            </article>
+            <hr>
+            <article>
+                <header>Insira seu E-Mail e senha para acessar o sistema</header>
                 <p>
                     <label for="email">E-Mail:&nbsp;</label>
                     <input id="email" type="email" placeholder="E-Mail" maxlength="120">
@@ -54,7 +58,6 @@
                         K.message.showSuccess(data.message);
                         K.setToken(data.object);
                         amplify.publish("auth/loggined");
-                        K.goTo('k-profile');
                     } else {
                         K.message.showError(data.message);
                         K.goTo('k-login');

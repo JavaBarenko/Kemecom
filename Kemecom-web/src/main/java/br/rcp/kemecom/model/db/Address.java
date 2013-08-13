@@ -5,22 +5,26 @@
 package br.rcp.kemecom.model.db;
 
 import com.google.code.morphia.annotations.Embedded;
-import com.mongodb.BasicDBObject;
-import com.mongodb.util.JSON;
+import java.io.Serializable;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * <p/>
- * @author barenko
+ <p/>
+ @author barenko
  */
 @Embedded
-public class Address extends BasicDBObject {
+public class Address implements Serializable {
 
     private String zipCode;
+
     private String street;
+
     private String number;
+
     private String city;
+
     private String state;
+
     private String neighborhood;
 
     public Address() {
@@ -82,10 +86,5 @@ public class Address extends BasicDBObject {
 
     public void setNeighborhood(String neighborn) {
         this.neighborhood = neighborn;
-    }
-
-    @Override
-    public String toString() {
-        return JSON.serialize(this);
     }
 }

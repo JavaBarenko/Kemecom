@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         buildDir: '../Kemecom-web/src/main/webapp/pages', //'/usr/local/Cellar/jetty/9.0.3/libexec/webapps.demo/ROOT'
-//        buildDir: '/Volumes/Data/frameworks/jboss-eap-6.1/standalone/tmp/vfs/temp30d37412ae40b444/Kemecom-web-1.0-SNAPSHOT.war-6515a78fe58da2f/pages',
+//        buildDir: '/Volumes/Data/frameworks/jboss-eap-6.1/standalone/tmp/vfs/temp2d80d2e0ccb8ac9c/Kemecom-web-1.0-SNAPSHOT.war-11f7c51e29819856/pages',
         distDir: '../Kemecom-web/src/main/webapp/pages',
         clean: {
             build: ['<%= buildDir %>', 'report'],

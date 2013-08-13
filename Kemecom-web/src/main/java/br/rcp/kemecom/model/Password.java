@@ -22,7 +22,7 @@ public class Password {
         if(p1 == null || p2 == null){
             return false;
         }
-        return p1.sha512Hex.equals(p2.sha512Hex);
+        return p1.equals(p2);
     }
 
     private String sha512Hex;
@@ -55,7 +55,10 @@ public class Password {
             return true;
         if(other == null || !other.getClass().isAssignableFrom(Password.class))
             return false;
-        return sha512Hex.equals(((Password) other).sha512Hex);
+        String oSha = ((Password) other).sha512Hex;
+        if(sha512Hex == null && oSha == null)
+            return true;
+        return sha512Hex == null ? oSha.equals(sha512Hex) : sha512Hex.equals(oSha);
     }
 
     @JsonIgnore

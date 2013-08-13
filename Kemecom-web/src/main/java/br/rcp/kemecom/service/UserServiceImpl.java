@@ -49,9 +49,10 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl() {
     }
 
-    public UserServiceImpl(Datastore ds, EmailSender es) {
+    public UserServiceImpl(Datastore ds, EmailSender es, HttpServletRequest req) {
         this.ds = ds;
         this.emailSender = es;
+        this.request = req;
     }
 
     @Override
@@ -119,6 +120,9 @@ public class UserServiceImpl implements UserService {
 
         if(!Password.equals(u.getPassword(), currentPassword)){
             throw new AuthException("A senha atual não confere!");
+        }
+        if(Password.equals(new Password(""), newPassword)){
+            throw new ApplicationException("A senha deve ter no mínimo 5 caracteres!");
         }
 
         ds.update(u, ds.createUpdateOperations(User.class).set("password", newPassword));

@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import net.vidageek.mirror.dsl.Mirror;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
             log.error("Erro interceptado pelo " + getClass().getSimpleName(), exception);
         }
 
-        Message msg = Message.error(exception.getMessage().replaceFirst(" \\('[^']+'\\)$", ""));
+        Message msg = Message.error(StringUtils.defaultIfEmpty(exception.getMessage(), "Erro Interno no servidor. Tente mais tarde.").replaceFirst(" \\('[^']+'\\)$", ""));
 
         Integer httpCode = getHttpCode(exception, log);
 
