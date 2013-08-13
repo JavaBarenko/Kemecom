@@ -4,8 +4,6 @@
  */
 package br.rcp.kemecom.model.db;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 /**
  <p/>
  @author barenko
@@ -84,10 +82,5 @@ public class Message {
 
     public void setObject(Object object) {
         this.object = object;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 }

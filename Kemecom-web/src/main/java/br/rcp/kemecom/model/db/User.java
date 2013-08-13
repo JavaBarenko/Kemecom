@@ -140,17 +140,4 @@ public class User {
         }
         return true;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("{");
-        if(id != null)
-            sb.append("id:'").append(id.toString()).append("', ");
-        if(email != null)
-            sb.append("id:'").append(email.toString()).append("', ");
-        if(address != null)
-            sb.append("address:").append(address.toString()).append(", ");
-        sb.append("}");
-        return sb.toString();
-    }
 }

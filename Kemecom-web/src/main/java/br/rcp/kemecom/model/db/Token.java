@@ -5,7 +5,6 @@
 package br.rcp.kemecom.model.db;
 
 import br.rcp.kemecom.model.Email;
-import br.rcp.kemecom.model.SecurityToken;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;

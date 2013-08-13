@@ -3,9 +3,35 @@
     var K = {};
     var homeTagName = null;
 
-    K.setHome = function(homeComponentTagName) {
-        homeTagName = homeComponentTagName;
+    K.bootstrap = function(homeComponentTagName) {
+        $(function() {
+            homeTagName = homeComponentTagName || "k-welcome";
+
+            if (K.isLoggedIn()) {
+                amplify.publish("auth/loggined");
+            } else {
+                amplify.publish("auth/loggouted");
+            }
+
+        });
     };
+
+    function loggined() {
+        K.goTo("k-profile");
+    }
+
+    function loggouted() {
+        K.goToHome();
+        K.setToken("");
+    }
+
+    amplify.subscribe("auth/loggined", function() {
+        loggined();
+    });
+    amplify.subscribe("auth/loggouted", function() {
+        loggouted();
+    });
+
 
     K.goToHome = function() {
         K.goTo(homeTagName);
@@ -14,6 +40,8 @@
     var token;
     K.setToken = function(tk) {
         token = tk;
+
+        $env.location.href = tk ? "#KemecomToken=" + tk : "#";
     };
 
     K.getToken = function() {
@@ -60,15 +88,25 @@
     };
 
     K.isLoggedIn = function() {
-        return JSON.parse($.ajax({
-            url: "/Kemecom-web/ws/auth",
-            dataType: "json",
-            async: false,
-            type: "GET",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader('KemecomToken', K.getToken());
-            }
-        }).responseText).successful;
+        var paramToken = $env.document.URL.match(/KemecomToken=[\da-f]{24}/);
+        if (paramToken)
+            paramToken = paramToken[0].split('=')[1];
+
+        if (paramToken) {
+            token = paramToken;
+            return true;
+        } else {
+            var result = JSON.parse($.ajax({
+                url: "/Kemecom-web/ws/auth",
+                dataType: "json",
+                async: false,
+                type: "GET",
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader('KemecomToken', K.getToken());
+                }
+            }).responseText);
+            return result.successful;
+        }
     };
 
     $env.K = K;

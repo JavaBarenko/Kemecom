@@ -32,4 +32,14 @@ public class Email {
     public String toString() {
         return email;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null || !obj.getClass().isAssignableFrom(Email.class))
+            return false;
+        Email o = (Email) obj;
+        if(email == null && o.email == null)
+            return true;
+        return email == null ? o.email.equals(email) : email.equals(o.email);
+    }
 }

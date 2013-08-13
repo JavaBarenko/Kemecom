@@ -14,33 +14,35 @@
                 </p>
                 <article class="address">
                     <header>Endereço</header>
-                    <p>
-                        <label for="zipCode">CEP:&nbsp;</label>
-                        <input id="zipCode" type="text" maxlength="9" placeholder="CEP" readonly="">
-                        <button id="searchZipcode" on-click="searchZipCode" disabled="">Buscar CEP</button>
-                    </p>
-                    <p>
-                        <label for="address">Logradouro:&nbsp;</label>
-                        <input id="address" maxlength="120" placeholder="Logradouro" readonly="">
-                        <input id="number" class="minimum" maxlength="6" placeholder="Número" readonly="">
-                    </p>
-                    <p>
-                        <label for="neighbor">Bairro:&nbsp;</label>
-                        <input id="neighbor" maxlength="32" placeholder="Bairro" readonly="">
-                    </p>
-                    <p>
-                        <label for="city">Cidade:&nbsp;</label>
-                        <input id="city" maxlength="32" placeholder="Cidade" readonly="">
-                    </p>
-                    <p>
-                        <label for="state">Estado:&nbsp;</label>
-                        <input id="state" maxlength="2" placeholder="Estado" readonly="">
-                    </p>
+                    <div class="form">
+                        <p>
+                            <label for="zipCode">CEP:&nbsp;</label>
+                            <input id="zipCode" style="width:200px" type="text" maxlength="9" placeholder="CEP" readonly="">
+                            <button id="searchZipcode" on-click="searchZipCode" disabled="">Buscar CEP</button>
+                        </p>
+                        <p>
+                            <label for="address">Logradouro:&nbsp;</label>
+                            <input id="address" style="width: 238px;" maxlength="120" placeholder="Logradouro" readonly="">
+                            <input id="number" class="minimum" maxlength="6" placeholder="Número" readonly="">
+                        </p>
+                        <p>
+                            <label for="neighborhood">Bairro:&nbsp;</label>
+                            <input id="neighborhood" maxlength="32" placeholder="Bairro" readonly="">
+                        </p>
+                        <p>
+                            <label for="city">Cidade:&nbsp;</label>
+                            <input id="city" maxlength="32" placeholder="Cidade" readonly="">
+                        </p>
+                        <p>
+                            <label for="state">Estado:&nbsp;</label>
+                            <input id="state" maxlength="2" placeholder="Estado" readonly="">
+                        </p>
+                    </div>
                 </article>
                 <p class="buttonPanel">
                     <button id="update" on-click="update">Alterar</button>
                     <button id="save" on-click="save" style="display: none">Salvar</button>
-                    <button id="changePassword" on-click="updatePassword">Alterar Senha</button>
+                    <button id="changePassword" on-click="changePassword">Alterar Senha</button>
                     <button id="removeAccount" on-click="removeAccount">Excluir conta</button>
                 </p>
             </article>
@@ -84,7 +86,7 @@
                         number: this.$.number.value,
                         street: this.$.address.value,
                         city: this.$.city.value,
-                        neighborhood: this.$.neighbor.value,
+                        neighborhood: this.$.neighborhood.value,
                         state: this.$.state.value
                     },
                     beforeSend: function(xhr, settings) {
@@ -100,7 +102,7 @@
                             this.$.zipCode.value = data.object.address.zipcode;
                             this.$.address.value = data.object.address.street;
                             this.$.number.value = data.object.address.number;
-                            this.$.neighbor.value = data.object.address.neighborhood;
+                            this.$.neighborhood.value = data.object.address.neighborhood;
                             this.$.city.value = data.object.address.city;
                             this.$.state.value = data.object.address.state;
                         }
@@ -123,7 +125,7 @@
                 });
             },
             changePassword: function() {
-                K.goTo('update-password');
+                K.goTo('k-update-password');
             },
             removeAccount: function() {
                 if (confirm("Tem certeza que quer excluir a conta?")) {
@@ -131,10 +133,6 @@
                         url: "/Kemecom-web/ws/user",
                         dataType: "json",
                         type: "DELETE",
-                        data: {
-                            email: this.$.email.value,
-                            address: this.$.password.value
-                        },
                         beforeSend: function(xhr, settings) {
                             xhr.setRequestHeader('KemecomToken', K.getToken());
                         }
@@ -172,7 +170,7 @@
                             this.$.zipCode.value = data.object.address.zipcode;
                             this.$.address.value = data.object.address.street;
                             this.$.number.value = data.object.address.number;
-                            this.$.neighbor.value = data.object.address.neighborhood;
+                            this.$.neighborhood.value = data.object.address.neighborhood;
                             this.$.city.value = data.object.address.city;
                             this.$.state.value = data.object.address.state;
                         }
