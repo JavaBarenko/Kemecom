@@ -24,14 +24,14 @@ public class MongoDatastore {
     private final MongoClient mongo;
     private final Morphia morphia;
 
-    public MongoDatastore(String dbname) throws UnknownHostException {
+    public MongoDatastore(String host, int port, String dbname, String username, String password) throws UnknownHostException {
         if (log.isInfoEnabled()) {
             log.info("Carregando MongoDatastore para dbname=" + dbname + " ...");
         }
 
-        mongo = new MongoClient();
+        mongo = new MongoClient(host, port);
         morphia = new Morphia();
-        ds = morphia.createDatastore(mongo, dbname);
+        ds = morphia.createDatastore(mongo, dbname, username, password == null ? null : password.toCharArray());
         if (log.isInfoEnabled()) {
             log.info("MongoDatastore carregado com sucesso!");
         }
