@@ -4,21 +4,24 @@
  */
 package br.rcp.wallmart.service;
 
+import static br.rcp.kemecom.helper.ConfigurationOptions.*;
 import br.rcp.kemecom.service.UserServiceImpl;
 import br.rcp.kemecom.helper.MongoDatastore;
+import br.rcp.kemecom.helper.MongoDatastoreBuilder;
 import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.Password;
 import br.rcp.kemecom.model.db.Address;
 import br.rcp.kemecom.model.db.Message;
+import br.rcp.kemecom.model.db.Token;
 import br.rcp.kemecom.model.db.User;
 import br.rcp.kemecom.service.UserService;
 import br.rcp.wallmart.TestUtils;
 import com.google.code.morphia.Datastore;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
-import org.bson.types.ObjectId;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,7 +44,19 @@ public class UserServiceTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        ds = new MongoDatastore("wallmartProjectTest").getDataStore();
+        Configuration config = new PropertiesConfiguration("config.properties");
+
+        MongoDatastore mongo = MongoDatastoreBuilder.mongo()
+                 .atHost(config.getString(TEST_DB_MONGO_HOST))
+                .inPort(config.getInt(TEST_DB_MONGO_PORT))
+                .forDbName(config.getString(TEST_DB_MONGO_DBNAME))
+                .withUsername(config.getString(TEST_DB_MONGO_USERNAME))
+                .withPassword(config.getString(TEST_DB_MONGO_PASSWORD))
+                .build();
+
+        ds = mongo.registryEntity(User.class).registryEntity(Token.class)
+//                .enableValidation()
+                .getDataStore();
     }
 
     @AfterClass
