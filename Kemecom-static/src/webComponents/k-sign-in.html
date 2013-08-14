@@ -12,29 +12,45 @@
             <hr>
             <article>
                 <header>Cadastre-se via Formulário</header>
-                <p>
-                    <label for="email">E-Mail:&nbsp;</label>
-                    <input id="email" type="email" placeholder="E-Mail" maxlength="120">
-                </p>
-                <p>
-                    <label for="password">Senha:&nbsp;</label>
-                    <input type="password" id="password" placeholder="Senha" maxlength="20">
-                </p>
-                <p>
-                    <label for="password2">Senha:&nbsp;</label>
-                    <input type="password" id="password2" placeholder="Confirmação de Senha" maxlength="20">
-                </p>
-                <p class="buttonPanel">
-                    <button on-click="signin">Criar conta!</button>
-                    <button on-click="cancel">Cancelar</button>
-                </p>
+                <div id="errorMessage" class="errorForm" style="display:none"></div>
+                <form novalidate="" id="form" class="form">
+                    <p>
+                        <label for="email">E-Mail:&nbsp;</label>
+                        <input id="email" type="email" placeholder="E-Mail" maxlength="120" data-trigger="change" data-required="true" data-type="email" data-message="Utilize um e-mail válido!">
+                    </p>
+                    <p>
+                        <label for="password">Senha:&nbsp;</label>
+                        <input type="password" id="password" placeholder="Senha" maxlength="20" on-change="enterPressed" data-trigger="change" data-required="true" data-rangelength="[5,20]" data-message="A senha deve ser entre 5 e 20 caracteres">
+                    </p>
+                    <p>
+                        <label for="password2">Confirmação de Senha:&nbsp;</label>
+                        <input type="password" id="password2" placeholder="Senha" maxlength="20" on-change="enterPressed" data-trigger="change" data-required="true" data-rangelength="[5,20]" data-message="A senha deve ser entre 5 e 20 caracteres">
+                    </p>
+                </form>
             </article>
+            <p class="buttonPanel">
+                <button on-click="signin">Criar conta!</button>
+                <button on-click="cancel">Cancelar</button>
+            </p>
         </div>
     </template>
 
     <script>
         Polymer('k-sign-in', {
+            validate: function() {
+                var valid = K.validate(this.$.form, this.$.errorMessage);
+                if (valid) {
+                    if (this.$.password.value != this.$.password2.value) {
+                        jQuery(this.$.errorMessage).html("<strong>A nova senha não confere com a senha de confirmação!</strong>");
+                        return false;
+                    }
+                }
+                return valid;
+            },
             signin: function() {
+                if (!this.validate())
+                    return;
+
                 jQuery.ajax({
                     url: "/Kemecom-web/ws/user/new",
                     dataType: "json",

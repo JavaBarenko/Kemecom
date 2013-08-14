@@ -12,21 +12,25 @@
             <hr>
             <article>
                 <header>Insira seu E-Mail e senha para acessar o sistema</header>
-                <p>
-                    <label for="email">E-Mail:&nbsp;</label>
-                    <input id="email" type="email" placeholder="E-Mail" maxlength="120">
-                </p>
-                <p>
-                    <label for="password">Senha:&nbsp;</label>
-                    <input type="password" id="password" placeholder="Senha" maxlength="20" on-change="enterPressed">
-                </p>
-                <a href="#" on-click="rememberPassword">Esqueci minha senha...</a>
-                <p class="buttonPanel">
-                    <button on-click="login">Entrar</button>
-                    <button on-click="register">Criar conta</button>
-                </p>
+                <div id="errorMessage" class="errorForm" style="display:none"></div>
+                <form novalidate="" id="form">
+                    <p>
+                        <label for="email">E-Mail:&nbsp;</label>
+                        <input id="email" type="email" placeholder="E-Mail" maxlength="120" data-trigger="change" data-required="true" data-type="email" data-message="Utilize um e-mail válido!">
+                    </p>
+                    <p>
+                        <label for="password">Senha:&nbsp;</label>
+                        <input type="password" id="password" placeholder="Senha" maxlength="20" on-change="enterPressed" data-trigger="change" data-required="true" data-rangelength="[5,20]" data-message="A senha deve ser entre 5 e 20 caracteres">
+                    </p>
+                    <a href="#" on-click="rememberPassword">Esqueci minha senha...</a>
+                </form>
             </article>
+            <p class="buttonPanel">
+                <button on-click="login">Entrar</button>
+                <button on-click="register">Criar conta</button>
+            </p>
         </div>
+
     </template>
 
     <script>
@@ -39,11 +43,17 @@
                 K.goTo("k-remember-password");
             },
             enterPressed: function(e) {
-                if (event.which == 13 || event.keyCode == 13) {
+                if (e.which === 13 || e.keyCode === 13) {
                     this.login();
                 }
             },
-            login: function() {
+            validate: function() {
+                return K.validate(this.$.form, this.$.errorMessage);
+            },
+            login: function(e) {
+                if (!this.validate())
+                    return;
+
                 jQuery.ajax({
                     url: "/Kemecom-web/ws/auth",
                     dataType: "json",
@@ -66,9 +76,12 @@
                     K.message.showError('Erro [' + error + "]:" + errorMsg);
                     K.goTo('k-login');
                 });
+
+                e.preventDefault();
             },
-            register: function() {
+            register: function(e) {
                 K.goTo("k-sign-in");
+                e.preventDefault();
             }
         });
     </script>

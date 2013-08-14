@@ -1,11 +1,11 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         buildDir: '../Kemecom-web/src/main/webapp/pages', //'/usr/local/Cellar/jetty/9.0.3/libexec/webapps.demo/ROOT'
-//        buildDir: '/Volumes/Data/frameworks/jboss-eap-6.1/standalone/tmp/vfs/temp2d80d2e0ccb8ac9c/Kemecom-web-1.0-SNAPSHOT.war-11f7c51e29819856/pages',
+//        buildDir: '/Volumes/Data/frameworks/jboss-eap-6.1/standalone/tmp/vfs/tempd342904ac6011841/Kemecom-web-1.0-SNAPSHOT.war-571d571b0173730d/pages',
         distDir: '../Kemecom-web/src/main/webapp/pages',
         clean: {
             build: ['<%= buildDir %>', 'report'],
-            dist: ['dist', 'report']
+            dist: ['<%= distDir %>', 'report']
         },
         less: {
             options: {
@@ -13,13 +13,7 @@ module.exports = function(grunt) {
             },
             build: {
                 files: [{
-                        '<%= buildDir %>/assets/style.css': ['src/less/*.less'],
-                        '<%= buildDir %>/assets/k-welcome.css': ['src/less/webComponents/k-welcome.less'],
-                        '<%= buildDir %>/assets/k-sign-in.css': ['src/less/webComponents/k-sign-in.less'],
-                        '<%= buildDir %>/assets/k-remember-password.css': ['src/less/webComponents/k-remember-password.less'],
-                        '<%= buildDir %>/assets/k-profile.css': ['src/less/webComponents/k-profile.less'],
-                        '<%= buildDir %>/assets/k-login.css': ['src/less/webComponents/k-login.less'],
-                        '<%= buildDir %>/assets/k-facebook.css': ['src/less/webComponents/k-facebook.less']
+                        '<%= buildDir %>/assets/style.css': ['src/less/*.less']
                     }]
             },
             dist: {
@@ -29,7 +23,7 @@ module.exports = function(grunt) {
                     report: 'gzip'
                 },
                 files: {
-                    'dist/assets/style.css': ['src/less/**/*.less']
+                    '<%= distDir %>/assets/style.css': ['src/less/*.less']
                 }
             }
         },
@@ -49,7 +43,7 @@ module.exports = function(grunt) {
                 src: ['<%= buildDir %>/assets/*.css']
             },
             dist: {
-                src: ['dist/assets/*.css']
+                src: ['<%= distDir %>/assets/*.css']
             }
         },
         cssmin: {
@@ -63,7 +57,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    'dist/assets/style.css': ['src/css/**/*.css', 'dist/assets/style.css']
+                    '<%= distDir %>/assets/style.css': ['src/css/**/*.css', '<%= distDir %>/assets/style.css']
                 }
             }
         },
@@ -82,7 +76,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= buildDir %>/assets/script.js': [
-                        'src/js/k.js', 'src/js/k-message.js', 'src/js/k-zipcode.js',
+                        'src/js/k.js', 'src/js/k-validation.js', 'src/js/k-zipcode.js',
                     ]
                 }
             },
@@ -92,7 +86,9 @@ module.exports = function(grunt) {
                     beautify: false
                 },
                 files: {
-                    'dist/assets/script.js': ['src/js/main.js', 'src/js/other.js']
+                    '<%= distDir %>/assets/script.js': [
+                        'src/js/k.js', 'src/js/k-validation.js', 'src/js/k-zipcode.js',
+                    ]
                 }
             }
         },
@@ -126,12 +122,12 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'src/',
                         src: ['*.html'],
-                        dest: 'dist/'
+                        dest: '<%= distDir %>/'
                     }, {
                         expand: true,
                         cwd: 'src/webComponents',
                         src: ['*.html'],
-                        dest: 'dist/webComponents'
+                        dest: '<%= distDir %>/webComponents'
                     }]
             }
         },
@@ -158,30 +154,30 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'src/img/',
                         src: ['**/*.jpg', '**/*.png', '**/*.jpeg', '**/*.gif'],
-                        dest: 'dist/assets/'
+                        dest: '<%= distDir %>/assets/'
                     }]
             }
         },
-        concat: {
-            options: {
-                separator: ';',
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %> */'
-            },
-            build: [{
-                    src: ['src/js/lib/polymer.min.js'],
-                    dest: '<%= buildDir %>/assets/polymer.js'
-                }, {
-                    src: ['src/js/lib/parsley.js'],
-                    dest: '<%= buildDir %>/assets/parsley.min.js'
-                }, {
-                    src: ['src/js/lib/jquery-1.10.2.min.js'],
-                    dest: '<%= buildDir %>/assets/jquery.js'
-                }],
-            dist: {
-                src: ['src/js/lib/polymer.min.js'],
-                dest: 'dist/assets/lib.js'
-            }
-        },
+//        concat: {
+//            options: {
+//                separator: ';',
+//                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %> */'
+//            },
+//            build: [{
+//                    src: ['src/js/lib/polymer.min.js'],
+//                    dest: '<%= buildDir %>/assets/polymer.js'
+//                }, {
+//                    src: ['src/js/lib/parsley.js'],
+//                    dest: '<%= buildDir %>/assets/parsley.min.js'
+//                }, {
+//                    src: ['src/js/lib/jquery-1.10.2.min.js'],
+//                    dest: '<%= buildDir %>/assets/jquery.js'
+//                }],
+//            dist: {
+//                src: ['src/js/lib/polymer.min.js'],
+//                dest: '<%= distDir %>/assets/lib.js'
+//            }
+//        },
         copy: {
             build: {
                 files: [
@@ -240,7 +236,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-concat');
+//    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
     //registra tarefas
