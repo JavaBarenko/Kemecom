@@ -41,7 +41,7 @@
                 var valid = K.validate(this.$.form, this.$.errorMessage);
                 if (valid) {
                     if (this.$.password.value != this.$.password2.value) {
-                        jQuery(this.$.errorMessage).html("<strong>A nova senha não confere com a senha de confirmação!</strong>");
+                        K.showFormMessage(this.$.errorMessage, "<strong>A nova senha não confere com a senha de confirmação!</strong>");
                         return false;
                     }
                 }
