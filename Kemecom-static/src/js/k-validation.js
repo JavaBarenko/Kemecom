@@ -8,17 +8,21 @@
             msg = msg + "<strong>" + $el.prevAll('label').text() + "</strong>" + $el.attr('data-message') + "<br>";
         });
 
-        var $errorMessage = $(messageElement);
-        $errorMessage.html(msg);
+        this.showFormMessage(messageElement, msg);
 
-        if (valid) {
+        return valid;
+    };
+
+    $env.showFormMessage = function(messageElement, msgContent) {
+        var $errorMessage = $(messageElement);
+        $errorMessage.html(msgContent);
+
+        if (msgContent) {
             if ($errorMessage.is(':visible'))
                 $errorMessage.slideUp();
         } else {
             if (!$errorMessage.is(':visible'))
                 $errorMessage.slideDown();
         }
-
-        return valid;
     };
 })(K, jQuery /*Parsley*/);

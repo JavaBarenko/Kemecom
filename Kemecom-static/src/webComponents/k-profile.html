@@ -65,7 +65,7 @@
                 if (value != this.$.number.value)
                     this.$.number.value = value;
             },
-            searchZipCode: function() {
+            searchZipCode: function(e) {
                 K.findZipCode(this.$.zipCode.value.replace(/\D/g, ""), function(data) {
                     this.$.zipCode.value = data.cep;
                     this.$.address.value = data.logradouro;
@@ -73,6 +73,7 @@
                     this.$.city.value = data.localidade;
                     this.$.state.value = data.uf;
                 }, this);
+                e.preventDefault();
             },
             update: function() {
                 this.$.name.readOnly = false;

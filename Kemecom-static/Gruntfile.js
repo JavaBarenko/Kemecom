@@ -27,25 +27,25 @@ module.exports = function(grunt) {
                 }
             }
         },
-        csslint: {
-            options: {
-                import: 2,
-                absoluteFilePathsForFormatters: true,
-                formatters: [{
-                        id: 'text',
-                        dest: 'report/csslint.txt'
-                    }, {
-                        id: 'csslint-xml',
-                        dest: 'report/csslint.xml'
-                    }]
-            },
-            build: {
-                src: ['<%= buildDir %>/assets/*.css']
-            },
-            dist: {
-                src: ['<%= distDir %>/assets/*.css']
-            }
-        },
+//        csslint: {
+//            options: {
+//                import: 2,
+//                absoluteFilePathsForFormatters: true,
+//                formatters: [{
+//                        id: 'text',
+//                        dest: 'report/csslint.txt'
+//                    }, {
+//                        id: 'csslint-xml',
+//                        dest: 'report/csslint.xml'
+//                    }]
+//            },
+//            build: {
+//                src: ['<%= buildDir %>/assets/*.css']
+//            },
+//            dist: {
+//                src: ['<%= distDir %>/assets/*.css']
+//            }
+//        },
         cssmin: {
             options: {
                 banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */'
@@ -189,6 +189,17 @@ module.exports = function(grunt) {
                         filter: 'isFile'
                     }
                 ]
+            },
+            dist: {
+                files: [
+                    {
+                        expand: true,
+                        src: 'src/js/lib/*',
+                        flatten: true,
+                        dest: '<%= buildDir %>/assets/',
+                        filter: 'isFile'
+                    }
+                ]
             }
         },
         watch: {
@@ -221,7 +232,7 @@ module.exports = function(grunt) {
         grunt.config(['uglify:build', 'all'], filepath);
         grunt.config(['imagemin:build', 'all'], filepath);
         grunt.config(['less:build', 'all'], filepath);
-        grunt.config(['csslint:build', 'all'], filepath);
+//        grunt.config(['csslint:build', 'all'], filepath);
         grunt.config(['htmlmin:build', 'all'], filepath);
     });
 
@@ -231,7 +242,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-csslint');
+//    grunt.loadNpmTasks('grunt-contrib-csslint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
@@ -241,6 +252,6 @@ module.exports = function(grunt) {
 
     //registra tarefas
     grunt.registerTask('build', ['clean:build', 'less:build', 'cssmin:build', 'jshint', 'uglify:build', 'copy:build', 'htmlmin:build', 'imagemin:build']);
-    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'csslint:dist', 'cssmin:dist', 'jshint', 'uglify:dist', 'copy:dist', 'htmlmin:dist', 'imagemin:dist']);
+    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'cssmin:dist', 'jshint', 'uglify:dist', 'copy:dist', 'htmlmin:dist', 'imagemin:dist']);
     grunt.registerTask('default', ['build']);
 };
