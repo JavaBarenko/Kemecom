@@ -7,9 +7,9 @@ package br.rcp.kemecom.helper;
 import br.rcp.kemecom.exception.AuthException;
 import br.rcp.kemecom.model.Email;
 import br.rcp.kemecom.model.Password;
-import br.rcp.kemecom.model.db.Message;
 import br.rcp.kemecom.model.db.Token;
 import br.rcp.kemecom.service.AuthenticatorService;
+import br.rcp.kemecom.service.UserService;
 import com.google.code.morphia.Datastore;
 import facebook4j.Facebook;
 import facebook4j.User;
@@ -42,6 +42,9 @@ public class FacebookService {
 
     @Inject
     private AuthenticatorService authenticatorService;
+
+    @Inject
+    private UserService userService;
 
     @GET
     public Response signin() {
@@ -76,10 +79,7 @@ public class FacebookService {
         Email userEmail = new Email(fbUser.getEmail());
         br.rcp.kemecom.model.db.User user = ds.find(br.rcp.kemecom.model.db.User.class, "email", userEmail).get();
         if(user == null){
-            user = new br.rcp.kemecom.model.db.User(userEmail);
-            user.setName(fbUser.getName());
-            user.setPassword(new Password(RandomStringUtils.randomAlphanumeric(10)));
-            ds.save(user);
+            user = createAccount(userEmail, fbUser);
         }else{
             if(StringUtils.isEmpty(user.getName())){
                 user.setName(fbUser.getName());
@@ -87,5 +87,15 @@ public class FacebookService {
             }
         }
         return authenticatorService.validateToken(user.getEmail());
+    }
+
+    private br.rcp.kemecom.model.db.User createAccount(Email userEmail, User fbUser) {
+        br.rcp.kemecom.model.db.User user = new br.rcp.kemecom.model.db.User(userEmail);
+        user.setName(fbUser.getName());
+        user.setPassword(new Password(RandomStringUtils.randomAlphanumeric(10)));
+        ds.save(user);
+
+        userService.sendRememberPassword(userEmail);
+        return user;
     }
 }

@@ -14,16 +14,17 @@
                 </p>
                 <article class="address">
                     <header>Endereço</header>
-                    <div class="form">
+                    <div id="errorMessage" class="errorForm" style="display:none"></div>
+                    <form novalidate="" id="form" class="form">
                         <p>
                             <label for="zipCode">CEP:&nbsp;</label>
-                            <input id="zipCode" style="width:200px" type="text" maxlength="9" placeholder="CEP" readonly="">
+                            <input id="zipCode" style="width:200px" type="text" on-keyup="validateZipCode" maxlength="9" placeholder="CEP" readonly="">
                             <button id="searchZipcode" on-click="searchZipCode" disabled="">Buscar CEP</button>
                         </p>
                         <p>
                             <label for="address">Logradouro:&nbsp;</label>
                             <input id="address" style="width: 238px;" maxlength="120" placeholder="Logradouro" readonly="">
-                            <input id="number" class="minimum" maxlength="6" placeholder="Número" readonly="">
+                            <input id="number" class="minimum" maxlength="6" on-keyup="validateNumber" placeholder="Número" readonly="">
                         </p>
                         <p>
                             <label for="neighborhood">Bairro:&nbsp;</label>
@@ -37,7 +38,7 @@
                             <label for="state">Estado:&nbsp;</label>
                             <input id="state" maxlength="2" placeholder="Estado" readonly="">
                         </p>
-                    </div>
+                    </form>
                 </article>
                 <p class="buttonPanel">
                     <button id="update" on-click="update">Alterar</button>
@@ -51,6 +52,19 @@
 
     <script>
         Polymer('k-profile', {
+            validate: function() {
+                return K.validate(this.$.form, this.$.errorMessage);
+            },
+            validateZipCode: function() {
+                var value = this.$.zipCode.value.replace(/\b(\d?\d?\d?\d?\d?\-?\d?\d?\d?).*/g, "$1");
+                if (value != this.$.zipCode.value)
+                    this.$.zipCode.value = value;
+            },
+            validateNumber: function() {
+                var value = this.$.number.value.replace(/(\d*).*/, "$1");
+                if (value != this.$.number.value)
+                    this.$.number.value = value;
+            },
             searchZipCode: function() {
                 K.findZipCode(this.$.zipCode.value.replace(/\D/g, ""), function(data) {
                     this.$.zipCode.value = data.cep;
@@ -70,6 +84,9 @@
                 this.$.save.style.display = "inline";
             },
             save: function() {
+//                if (!this.validate())
+//                    return;
+
                 this.$.name.readOnly = true;
                 this.$.zipCode.readOnly = true;
                 this.$.number.readOnly = true;
