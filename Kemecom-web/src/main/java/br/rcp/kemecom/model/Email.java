@@ -1,5 +1,6 @@
 package br.rcp.kemecom.model;
 
+import java.io.Serializable;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -7,7 +8,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  <p/>
  @author barenko
  */
-public class Email {
+public class Email implements Serializable {
 
     private String email;
 

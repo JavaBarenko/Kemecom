@@ -3,6 +3,7 @@ package br.rcp.kemecom.helper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.Future;
+import javax.enterprise.inject.Alternative;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.MemcachedClient;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
  <p/>
  @author barenko
  */
+@Alternative
 public class Memcached {
 
     private Logger log = LoggerFactory.getLogger(Memcached.class);

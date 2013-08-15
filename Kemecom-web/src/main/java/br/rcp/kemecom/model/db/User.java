@@ -7,6 +7,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Version;
+import java.io.Serializable;
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -16,7 +17,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  @author barenko
  */
 @Entity(value = "users", noClassnameStored = true)
-public class User {
+public class User implements Serializable {
 
     public static final String CURRENT_USER = "CurrentUser";
 
