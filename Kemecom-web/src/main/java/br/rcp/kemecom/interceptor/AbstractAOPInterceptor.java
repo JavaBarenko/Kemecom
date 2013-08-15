@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.interceptor;
 
 import java.lang.reflect.Field;
@@ -12,8 +8,8 @@ import net.vidageek.mirror.dsl.Mirror;
 import net.vidageek.mirror.list.dsl.Matcher;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public abstract class AbstractAOPInterceptor {
 

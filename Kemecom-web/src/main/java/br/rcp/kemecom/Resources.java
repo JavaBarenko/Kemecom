@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom;
 
 import static br.rcp.kemecom.helper.ConfigurationOptions.*;
@@ -28,21 +24,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p/>
- * @author barenko
+ <p/>
+ @author barenko
  */
 public class Resources {
 
     private Logger log = LoggerFactory.getLogger(Resources.class);
+
     @Produces
     @ApplicationScoped
     private Datastore ds;
+
     @Produces
     @ApplicationScoped
     private Memcached memcached;
+
     @Produces
     @ApplicationScoped
     private EmailSender emailSender;
+
     @Produces
     @SessionScoped
     private Facebook facebook;
@@ -52,7 +52,7 @@ public class Resources {
     private Configuration config;
 
     public Resources() throws Exception {
-        if (log.isInfoEnabled()) {
+        if(log.isInfoEnabled()){
             log.info("Carregando recursos ...");
         }
 
@@ -62,9 +62,13 @@ public class Resources {
         loadEmailSender();
         loadFacebookClient();
 
-        if (log.isInfoEnabled()) {
+        if(log.isInfoEnabled()){
             log.info("Recursos carregados com sucesso!");
         }
+    }
+
+    private void loadConfiguration() throws ConfigurationException {
+        config = new PropertiesConfiguration("config.properties");
     }
 
     private void loadMemcached() throws IOException {
@@ -83,7 +87,6 @@ public class Resources {
     }
 
     private void loadDatastore() throws UnknownHostException {
-//        MongoDatastore mongo = new MongoDatastore("127.0.0.1", 27017, "KemecomProject", null, null);
         MongoDatastore mongo = MongoDatastoreBuilder.mongo()
                 .atHost(config.getString(DB_MONGO_HOST))
                 .inPort(config.getInt(DB_MONGO_PORT))
@@ -104,9 +107,5 @@ public class Resources {
                 .withUsername(config.getString(EMAIL_SMTP_USERNAME))
                 .withPassword(config.getString(EMAIL_SMTP_PASSWORD))
                 .build();
-    }
-
-    private void loadConfiguration() throws ConfigurationException {
-        config = new PropertiesConfiguration("config.properties");
     }
 }

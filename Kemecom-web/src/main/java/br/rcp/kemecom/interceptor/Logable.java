@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.interceptor;
 
 import java.lang.annotation.Retention;
@@ -11,8 +7,9 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
 /**
- *
- * @author barenko
+ Marca todos os metodos que deverao ser logados
+ <p/>
+ @author barenko
  */
 @InterceptorBinding
 @Retention(RUNTIME)

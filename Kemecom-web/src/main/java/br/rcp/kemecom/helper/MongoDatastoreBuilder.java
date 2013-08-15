@@ -1,24 +1,26 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.helper;
 
 import java.net.UnknownHostException;
 
 /**
- *
- * @author barenko
+ Builder do {@link MongoDatastore}.
+ <p/>
+ @author barenko
  */
 public class MongoDatastoreBuilder {
 
     public static MongoDatastoreBuilder mongo() {
         return new MongoDatastoreBuilder();
     }
+
     private String host;
+
     private int port;
+
     private String dbName;
+
     private String username;
+
     private String password;
 
     private MongoDatastoreBuilder() {
@@ -45,7 +47,7 @@ public class MongoDatastoreBuilder {
     }
 
     public MongoDatastoreBuilder withPassword(String password) {
-        if (password != null)
+        if(password != null)
             this.password = password;
         return this;
     }

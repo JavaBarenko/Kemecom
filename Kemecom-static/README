@@ -4,20 +4,18 @@ Configuraçao de ambiente
 sudo npm install -g grunt-cli
 npm install
 
-
-
-
-
 /*
-npm install grunt-contrib-uglify --save-dev
-npm install grunt-contrib-less --save-dev
 npm install grunt-contrib-clean --save-dev
+npm install grunt-contrib-less --save-dev
 npm install grunt-contrib-jshint --save-dev
+npm install grunt-contrib-uglify --save-dev
 npm install grunt-contrib-cssmin --save-dev
 npm install grunt-contrib-htmlmin --save-dev
 npm install grunt-contrib-imagemin --save-dev
 npm install grunt-contrib-watch --save-dev
-npm install grunt-contrib-csslint --save-dev
-npm install grunt-contrib-concat --save-dev
 npm install grunt-contrib-copy --save-dev
+npm install grunt-text-replace --save-dev
+
+npm install grunt-contrib-concat --save-dev
+npm install grunt-contrib-csslint --save-dev
 */

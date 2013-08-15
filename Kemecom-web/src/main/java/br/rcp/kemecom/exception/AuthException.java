@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.exception;
 
 /**
- *
- * @author barenko
+ Manipula todas as exceptions relacionadas a seguranca e acesso
+ <p/>
+ @author barenko
  */
 public class AuthException extends ApplicationException {
 

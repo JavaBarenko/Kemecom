@@ -1,4 +1,12 @@
+/*
+ * Modulo de validacao de campos e formularios
+ */
 (function($env, $) {
+    /*
+     * Valida os inputs de um determinado form e apresenta os erros no elemento de mensagem especificado.
+     * A validacao eh executada internamente pelo parsley.
+     * Retorna true se validado com sucesso.
+     */
     $env.validate = function(formElement, messageElement) {
         var $form = $(formElement);
         var valid = $form.parsley('validate');
@@ -13,6 +21,9 @@
         return valid;
     };
 
+    /*
+     * Exibe uma mensagem de erros no elemento especificado.
+     */
     $env.showFormMessage = function(messageElement, msgContent) {
         var $errorMessage = $(messageElement);
         $errorMessage.html(msgContent);
