@@ -3,6 +3,8 @@ package br.rcp.kemecom.service;
 import br.rcp.kemecom.exception.ApplicationException;
 import br.rcp.kemecom.exception.AuthException;
 import br.rcp.kemecom.helper.EmailSender;
+import br.rcp.kemecom.interceptor.Memorable;
+import br.rcp.kemecom.interceptor.Forgettable;
 import br.rcp.kemecom.interceptor.Logable;
 import br.rcp.kemecom.interceptor.Secure;
 import br.rcp.kemecom.model.Email;
@@ -13,7 +15,6 @@ import br.rcp.kemecom.model.db.User;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.query.ValidationException;
 import com.mongodb.MongoException;
-import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secure
+    @Memorable("me")
     public Message getMe() {
         User u = getCurrentUser().withoutPassword();
         return Message.ok("", u);
@@ -75,6 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secure
+    @Forgettable("me")
     public Message updateUser(MultivaluedMap<String, String> formParams) {
         User u = getCurrentUser();
         u.setName(formParams.getFirst("name"));
@@ -96,18 +99,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secure
+    @Forgettable("me")
     public Message removeUser() {
         ds.delete(getCurrentUser());
         return Message.ok("Usuário excluído com sucesso!");
     }
 
-    @Override
-    @Secure
-    public Message getUsers() {
-        List<User> users = ds.createQuery(User.class).retrievedFields(false, "password").order("email").asList();
-        return Message.ok("", users);
-    }
-
+//    @Override
+//    @Secure
+//    @Cacheable
+//    public Message getUsers() {
+//        List<User> users = ds.createQuery(User.class).retrievedFields(false, "password").order("email").asList();
+//        return Message.ok("", users);
+//    }
     @Override
     @Secure
     public Message updatePassword(Password currentPassword, Password newPassword) {

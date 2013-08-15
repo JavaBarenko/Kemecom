@@ -1,5 +1,6 @@
 package br.rcp.kemecom.model;
 
+import java.io.Serializable;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -8,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  <p/>
  @author barenko
  */
-public class Password {
+public class Password implements Serializable {
 
     public static boolean equals(Password p1, Password p2) {
         if(p1 == p2){

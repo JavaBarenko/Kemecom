@@ -6,5 +6,7 @@
     <interceptors>
         <class>br.rcp.kemecom.interceptor.LoggingInterceptor</class>
         <class>br.rcp.kemecom.interceptor.SecurityInterceptor</class>
+        <class>br.rcp.kemecom.interceptor.MemcachedRememberInterceptor</class>
+        <class>br.rcp.kemecom.interceptor.MemcachedForgetInterceptor</class>
     </interceptors>
 </beans>

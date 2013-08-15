@@ -5,6 +5,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Version;
+import java.io.Serializable;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,7 +16,7 @@ import org.bson.types.ObjectId;
  @author barenko
  */
 @Entity("auth")
-public class Token {
+public class Token implements Serializable {
 
     public static final String SECURITY_TOKEN = "KemecomToken";
 

@@ -5,8 +5,6 @@ import br.rcp.kemecom.model.SecurityToken;
 import br.rcp.kemecom.model.db.Token;
 import br.rcp.kemecom.model.db.User;
 import br.rcp.kemecom.service.AuthenticatorService;
-import java.lang.reflect.Field;
-import java.util.List;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -27,13 +25,8 @@ public class SecurityInterceptor extends AbstractAOPInterceptor {
     @AroundInvoke
     public Object auth(InvocationContext ctx) throws Exception {
 
-        final List<Field> requests = getFieldsByType(ctx, HttpServletRequest.class);
+        HttpServletRequest request = getHttpServletRequest(ctx);
 
-        if(requests.isEmpty()){
-            throw new AuthException(getClassName(ctx) + " não suporta autenticacão!");
-        }
-
-        HttpServletRequest request = (HttpServletRequest) getFieldValue(ctx, requests.get(0));
         if(request == null){
             throw new AuthException("A requisição http está nula!");
         }

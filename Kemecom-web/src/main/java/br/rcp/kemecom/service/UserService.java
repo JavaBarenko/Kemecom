@@ -25,10 +25,9 @@ public interface UserService {
     @Path("/me")
     Message getMe();
 
-    @GET
-    @Path("/list")
-    Message getUsers();
-
+//    @GET
+//    @Path("/list")
+//    Message getUsers();
     @DELETE
     Message removeUser();
 

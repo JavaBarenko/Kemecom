@@ -1,12 +1,13 @@
 package br.rcp.kemecom.model;
 
+import java.io.Serializable;
 import org.bson.types.ObjectId;
 
 /**
  <p/>
  @author barenko
  */
-public class SecurityToken {
+public class SecurityToken implements Serializable {
 
     private ObjectId tokenId;
 

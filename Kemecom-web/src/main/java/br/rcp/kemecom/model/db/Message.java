@@ -1,10 +1,12 @@
 package br.rcp.kemecom.model.db;
 
+import java.io.Serializable;
+
 /**
  <p/>
  @author barenko
  */
-public class Message {
+public class Message implements Serializable {
 
     public static enum Type {
 
