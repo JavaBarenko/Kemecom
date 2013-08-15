@@ -68,11 +68,13 @@
                         K.message.showError(data.message);
                         this.$.email.value = "";
                         this.$.password.value = "";
+                        this.$.password2.value = "";
                     }
                 }).fail(function(xhr, error, errorMsg) {
                     K.message.showError('Erro [' + error + "]:" + errorMsg);
                     this.$.email.value = "";
                     this.$.password.value = "";
+                    this.$.password2.value = "";
                 });
             },
             cancel: function() {

@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
         resources.add(br.rcp.kemecom.helper.FacebookService.class);
         resources.add(br.rcp.kemecom.service.AuthenticatorService.class);
         resources.add(br.rcp.kemecom.service.AuthenticatorServiceImpl.class);
+        resources.add(br.rcp.kemecom.service.UserService.class);
         resources.add(br.rcp.kemecom.service.UserServiceImpl.class);
     }
 }
