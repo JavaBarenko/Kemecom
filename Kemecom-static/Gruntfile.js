@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
     grunt.initConfig({
-        buildDir: '../Kemecom-web/src/main/webapp/pages', //'/usr/local/Cellar/jetty/9.0.3/libexec/webapps.demo/ROOT'
-//        buildDir: '/Volumes/Data/frameworks/jboss-eap-6.1/standalone/tmp/vfs/tempd342904ac6011841/Kemecom-web-1.0-SNAPSHOT.war-571d571b0173730d/pages',
+        buildDir: '../Kemecom-web/src/main/webapp/pages',
         distDir: '../Kemecom-web/src/main/webapp/pages',
         clean: {
             build: ['<%= buildDir %>', 'report'],
@@ -76,7 +75,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= buildDir %>/assets/script.js': [
-                        'src/js/k.js', 'src/js/k-validation.js', 'src/js/k-zipcode.js',
+                        'src/js/k.js', 'src/js/k-validation.js', 'src/js/k-zipcode.js'
                     ]
                 }
             },
@@ -87,7 +86,7 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= distDir %>/assets/script.js': [
-                        'src/js/k.js', 'src/js/k-validation.js', 'src/js/k-zipcode.js',
+                        'src/js/k.js', 'src/js/k-validation.js', 'src/js/k-zipcode.js'
                     ]
                 }
             }
@@ -128,6 +127,42 @@ module.exports = function(grunt) {
                         cwd: 'src/webComponents',
                         src: ['*.html'],
                         dest: '<%= distDir %>/webComponents'
+                    }]
+            }
+        },
+        replace: {
+            build: {
+                src: ['<%= buildDir %>/*.html'],
+                overwrite: true,
+                replacements: [{
+                        from: 'LIB/JQUERY',
+                        to: './assets/jquery-1.10.2.min.js'
+                    }, {
+                        from: 'LIB/AMPLIFY',
+                        to: './assets/amplify.core.min.js'
+                    }, {
+                        from: 'LIB/PARSLEY',
+                        to: './assets/parsley.min.js'
+                    }, {
+                        from: 'LIB/POLYMER',
+                        to: './assets/polymer.min.js'
+                    }]
+            },
+            dist: {
+                src: ['<%= distDir %>/*.html'],
+                overwrite: true,
+                replacements: [{
+                        from: 'LIB/JQUERY',
+                        to: 'http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js'
+                    }, {
+                        from: 'LIB/AMPLIFY',
+                        to: 'http://cdnjs.cloudflare.com/ajax/libs/amplifyjs/1.1.0/amplify.min.js'
+                    }, {
+                        from: 'LIB/PARSLEY',
+                        to: 'http:///cdnjs.cloudflare.com/ajax/libs/parsley.js/1.1.16/parsley.min.js'
+                    }, {
+                        from: 'LIB/POLYMER',
+                        to: 'http://cdnjs.cloudflare.com/ajax/libs/polymer/0.0.20130711/polymer.min.js'
                     }]
             }
         },
@@ -205,7 +240,6 @@ module.exports = function(grunt) {
         watch: {
             options: {
                 nospawn: true
-                        //livereload: 34567 //port: 35729
             },
             buildScripts: {
                 files: ['{src,test}/js/**/*.js', 'Gruntfile.js'],
@@ -249,9 +283,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 //    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-text-replace');
 
     //registra tarefas
-    grunt.registerTask('build', ['clean:build', 'less:build', 'cssmin:build', 'jshint', 'uglify:build', 'copy:build', 'htmlmin:build', 'imagemin:build']);
-    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'cssmin:dist', 'jshint', 'uglify:dist', 'copy:dist', 'htmlmin:dist', 'imagemin:dist']);
+    grunt.registerTask('build', ['clean:build', 'less:build', 'cssmin:build', 'jshint', 'uglify:build', 'copy:build', 'htmlmin:build', 'replace:build', 'imagemin:build']);
+    grunt.registerTask('dist', ['clean:dist', 'less:dist', 'cssmin:dist', 'jshint', 'uglify:dist', 'copy:dist', 'htmlmin:dist', 'replace:dist', 'imagemin:dist']);
     grunt.registerTask('default', ['build']);
 };

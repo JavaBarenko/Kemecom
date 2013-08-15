@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.service;
 
 import br.rcp.kemecom.exception.ApplicationException;
@@ -79,7 +75,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secure
-//            public Message updateUser(@FormParam("name") String name, @FormParam("address") Address address) {request.getParameter("address")
     public Message updateUser(MultivaluedMap<String, String> formParams) {
         User u = getCurrentUser();
         u.setName(formParams.getFirst("name"));

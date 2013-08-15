@@ -1,20 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.helper;
 
 /**
- *
- * @author barenko
+ <p/>
+ @author barenko
  */
 public class GmailEmailSenderBuilder {
-        public static GmailEmailSenderBuilder sender() {
+
+    public static GmailEmailSenderBuilder sender() {
         return new GmailEmailSenderBuilder();
     }
+
     private String smtp;
+
     private int port;
+
     private String password;
+
     private String username;
 
     private GmailEmailSenderBuilder() {
@@ -36,7 +37,7 @@ public class GmailEmailSenderBuilder {
     }
 
     public GmailEmailSenderBuilder withPassword(String password) {
-        if (password != null)
+        if(password != null)
             this.password = password;
         return this;
     }

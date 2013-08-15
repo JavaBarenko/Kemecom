@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.exception.mapper;
 
 import br.rcp.kemecom.model.db.Message;
@@ -14,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ Captura todas as exceptions nao tratadas e as envelopa em uma {@link Message} contendo a mensagem de erro.
  <p/>
  @author barenko
  */
@@ -27,7 +24,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
             log.error("Erro interceptado pelo " + getClass().getSimpleName(), exception);
         }
 
-        Message msg = Message.error(StringUtils.defaultIfEmpty(exception.getMessage(), "Erro Interno no servidor. Tente mais tarde.").replaceFirst(" \\('[^']+'\\)$", ""));
+        Message msg = Message.error(messageFormatter(exception.getMessage()));
 
         Integer httpCode = getHttpCode(exception, log);
 
@@ -36,6 +33,11 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
         }
 
         return Response.status(httpCode).entity(msg).build();
+    }
+
+    private String messageFormatter(String rawMessage) {
+        String errorMsg = StringUtils.defaultIfEmpty(rawMessage, "Erro Interno no servidor. Tente mais tarde.");
+        return errorMsg.replaceFirst(" \\('[^']+'\\)$", "");
     }
 
     private Integer getHttpCode(Exception exception, Logger log) {

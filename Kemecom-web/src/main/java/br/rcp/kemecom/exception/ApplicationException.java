@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.exception;
 
 /**
+ Utilizada para manipular todas as exceptions de negocio da aplicacao
  <p/>
  @author barenko
  */

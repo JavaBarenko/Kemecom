@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.rcp.kemecom.model;
 
-import com.google.code.morphia.annotations.Transient;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -26,10 +21,6 @@ public class Password {
     }
 
     private String sha512Hex;
-
-    //TODO remover esse campo de teste depois....
-    @Transient
-    private String password;
 
     public Password() {
     }
