@@ -41,7 +41,7 @@ O projeto foi arquitetado em dois sub-projetos:
 ##Pré-requisitos##
 
 * Java SE 7
-* JBoss EAS 6.1
+* JBoss EAP 6.1
 * Netbeans (Recomendo: 7.3+)
 	+ Maven
 * Git
