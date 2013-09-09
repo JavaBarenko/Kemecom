@@ -7,7 +7,7 @@ Projeto POC que utiliza HTML5, GruntJS, Ajax, SPA, Web Components, JEE 6, Restea
 * Clientes podem se cadastrar usando email/senha ou facebook
 * Clientes podem se logar no sistema usando email/senha ou facebook. Ao se logar, a tela inicial de login será a profile do cliente.
 * Clientes podem resetar a senha com "lembrar senha" na tela de login, sendo necessário fornecer o email. Caso email seja de um cliente válido, o sistema gerará uma nova senha para o cliente e a enviará ao email fornecido.
-* Após estar logado, cliente pode adastrar seu endereço utilizando o CEP e o número. (cliente deverá colocar o CEP e clicar no botão para pesquisar cep, no qual preencherá o logradouro, bairro, cidade e estado)
+* Após estar logado, cliente pode cadastrar seu endereço utilizando o CEP e o número. (cliente deverá colocar o CEP e clicar no botão para pesquisar cep, no qual preencherá o logradouro, bairro, cidade e estado)
 
 ##Design##
 
@@ -19,8 +19,8 @@ O projeto foi arquitetado em dois sub-projetos:
 
 * Desenvolvido em JEE 6 e Resteasy para fornecer os serviços de login e usuário.
 * Possui interceptors para logging, segurança e cache, de forma que essas funcionalidades fiquem fora da lógica do negócio
-* A validação de login é feita através do KemecomToken, que é o objectId do documento de autenticacao salvo no mongodb. Esse documento contém o email e o ip do ciente. O token deve ser devolvido no header para todas as requisições a serviços que estejam mapeadas com a anotação @Secure.
-* Foi utilizado o framework morphia para conexão com a base de dados, devido a facilidade gerar documentos as anotações do JPA e outras específicas para o MongoDB.
+* A validação de login é feita através do KemecomToken, que é o objectId do documento de autenticação salvo no mongodb. Esse documento contém o email e o ip do cliente. O token deve ser devolvido no header para todas as requisições a serviços que estejam mapeadas com a anotação @Secure.
+* Foi utilizado o framework morphia para conexão com a base de dados, devido a facilidade gerar documentos com as anotações do JPA e outras específicas para o MongoDB.
 * Todas as respostas de serviços do sistema são tratadas com a classe Message e retornam como ajax. A classe Message possui as seguintes informações:
 	+ O flag 'successful', que indica se ouve falha ou sucesso no processo do ponto de vista do negócio;
 	+ A string 'message', que indica uma mensagem de retorno para o usuário (utilizada em alguns serviços e para erros)
